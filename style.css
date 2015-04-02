@@ -1,0 +1,24 @@
+button{
+border-radius:5px;
+border-style:none;
+font-size:25px;
+display:block;
+margin-right:auto;
+margin-left:auto;
+font-face: Arial, sans-serif;
+padding: 3px 5px 3px 5px;
+color:#FFFFFF;
+box-shadow: 1px 1px 3px #505050;
+}
+
+.default{
+background-color: #F0A911;
+}
+.buzzed{
+background-color: #11ba1f;
+}
+.locked{
+background-color: #D10A0A;
+opacity: 0.5;
+box-shadow: none;
+}
