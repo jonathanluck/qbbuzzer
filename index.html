@@ -2,13 +2,34 @@
 
 <head>
 <link rel="stylesheet" type="text/css" href="style.css">
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+<script>
+  var socket = io();
+  function buzz(){
+	socket.emit("buzz","userbuzzed");
+	return false;
+	
+  }
+  function clearbuzzer(){
+	socket.emit("clear","asdf");
+	return false;
+	
+  }
+  
+  socket.on('locked', function(msg){
+    $('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
+  });
+  socket.on('clear', function(msg){
+    $('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled",false);
+  });
+  
+</script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 </head>
 
-<button class="default" onclick = "alert('buzz')">Buzz</button>
+<button id="buzzbutton" class="default" onclick = "buzz()">Buzz</button>
 <br>
-<button class="buzzed" onclick = "alert('buzz')">Your Buzz</button>
-<br>
-<button class ="locked" onclick = "">Locked</button>
+<button class="clear" onclick="clearbuzzer()">Clear</button>
 
 </html>
