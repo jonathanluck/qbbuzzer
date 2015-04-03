@@ -5,22 +5,23 @@ var sound = "pop";
 var audio = document.getElementById("sound");
 $("#container").hide();
 $('.clear').hide();
+
+
 function buzz(){
-socket.emit("buzz",name);
-return false;
-
+	socket.emit("buzz",name);
+	return false;
 }
+
 function clearbuzzer(){
-socket.emit("clear","");
-return false;
-
+	socket.emit("clear","");
+	return false;
 }
+
 function checkname(){
 	name = prompt('What is your username');
 	name = name.trim().replace(/</g,"");
 	socket.emit("check name", name);
 	return false;
-
 }
 
 function togglesound(){
@@ -33,7 +34,6 @@ function togglesound(){
 		$("#togglesound").text("Sound: Off")
 		$("#changesound").hide();
 	}
-	
 }
 
 function playSound(){
@@ -56,33 +56,33 @@ function changesound(){
 }
 
 
+
 socket.on('locked', function(msg){
-$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
-$('#container').text(msg+ " has buzzed").show(250);
-$('.clear').hide();
-playSound();
+	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
+	$('#container').text(msg+ " has buzzed").show(250);
+	$('.clear').hide();
+	playSound();
 });
 
 socket.on('your buzz', function(msg){
-$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled",true);
-$('.clear').show();
-playSound();
-
+	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled",true);
+	$('.clear').show();
+	playSound();
 });
 
 socket.on('clear', function(msg){
-$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled",false);
-$('#container').text("").hide(350);
-$('.clear').hide();
+	$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled",false);
+	$('#container').text("").hide(350);
+	$('.clear').hide();
 });
 
 socket.on('good name', function(msg){
-$("#users").append("<p> Your username is: "+msg+"</p>");
+	$("#users").append("<p> Your username is: "+msg+"</p>");
 });
 
 socket.on('bad name', function(msg){
-alert("Username already taken");
-checkname();
+	alert("Username already taken");
+	checkname();
 });
 
 socket.on('add name', function(msg){

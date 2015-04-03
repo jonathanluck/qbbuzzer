@@ -1,33 +1,35 @@
 <html>
 
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="style.css">
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-<audio id="sound" src="pop.mp3" preload="auto"></audio>
-<audio id="sound2" src="buzzsound.mp3" preload="auto"></audio>
-<script src ="qbbuzzer.js"></script>
-
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+	<audio id="sound" src="pop.mp3" preload="auto"></audio>
+	<audio id="sound2" src="buzzsound.mp3" preload="auto"></audio>
+	<script src ="qbbuzzer.js"></script>
 </head>
+
+
 <body>
 	<div id ="wrapper">
 		<div id="container" style="display:none"></div>
-	
-	<br>
-	<button id="buzzbutton" class="default" onclick = "buzz()">
-		Buzz
-	</button>
-	<br>
-	<button class="clear" onclick="clearbuzzer()" style="display:none">
-		Clear
-	</button>
-	<button id="togglesound" class ="soundbuttons" onclick="togglesound()">Sound: On</button>
-	<button id="changesound" class ="soundbuttons" onclick="changesound()">Sound: Pop</button>
-	<div id="tablewrapper">
+		<br>
+		<button id="buzzbutton" class="default" onclick = "buzz()">
+			Buzz
+		</button>
+		<br>
+		<button class="clear" onclick="clearbuzzer()" style="display:none">
+			Clear
+		</button>
+		<button id="togglesound" class ="soundbuttons" onclick="togglesound()">
+			Sound: On
+		</button>
+		<button id="changesound" class ="soundbuttons" onclick="changesound()">
+			Sound: Pop
+		</button>
 		<table id="users"></table>
-	</div>
 	</div>
 </body>
 </html>
