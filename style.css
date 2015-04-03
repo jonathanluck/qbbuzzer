@@ -1,12 +1,13 @@
 button{
 border-radius:5px;
 border-style:none;
-font-size:25px;
+font-size:37px;
 display:block;
 margin-right:auto;
 margin-left:auto;
+margin-top:10px;
 font-face: Arial, sans-serif;
-padding: 3px 5px 3px 5px;
+padding: 6px 15px 6px 15px;
 color:#FFFFFF;
 box-shadow: 1px 1px 3px #505050;
 }
@@ -31,18 +32,19 @@ font-color: #000000;
 display:block;
 margin-right:auto;
 margin-left:auto;
+text-align:center;
 }
 
 #container{
+position:relative;
 background-color:#606060;
 border-radius: 3px;
 text-align:center;
 margin-bottom:10px;
-padding:2px 2px 2px 2px;
+padding:2px 6px 2px 6px;
 display:inline;
 margin-right:auto;
 margin-left:auto;
 color:#FFFFFF;
 }
-
 

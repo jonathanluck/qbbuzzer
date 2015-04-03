@@ -20,7 +20,9 @@ app.get('/', function(req, res){
 app.get('/style.css', function(req, res){
   res.sendFile(__dirname + '/style.css');
 });
-
+app.get('/pop.mp3', function(req, res){
+  res.sendFile(__dirname + '/pop.mp3');
+});
 io.on('connection', function(socket){
   socket.on('buzz',function(buzz){
 	if(canbuzz){
