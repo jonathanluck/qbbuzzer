@@ -58,7 +58,7 @@ function changesound(){
 
 socket.on('locked', function(msg){
 $('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
-$('#container').show(250).text(msg+ " has buzzed");
+$('#container').text(msg+ " has buzzed").show(250);
 $('.clear').hide();
 playSound();
 });
@@ -72,15 +72,25 @@ playSound();
 
 socket.on('clear', function(msg){
 $('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled",false);
-$('#container').hide(250).text("");
+$('#container').text("").hide(350);
 $('.clear').hide();
 });
 
 socket.on('good name', function(msg){
 $("#users").append("<p> Your username is: "+msg+"</p>");
 });
+
 socket.on('bad name', function(msg){
 alert("Username already taken");
 checkname();
 });
+
+socket.on('add name', function(msg){
+	$("#users").append("<tr id='"+msg+"'><td>"+msg+"</td></tr>");
+});
+
+socket.on('remove name', function(msg){
+	$("#"+msg).remove();
+});
+
 checkname();

@@ -1,12 +1,15 @@
+body{
+font-family: Arial, sans-serif;
+}
+
 button{
 border-radius:5px;
 border-style:none;
-font-size:37px;
+font-size:42px;
 display:block;
 margin-right:auto;
 margin-left:auto;
 margin-top:10px;
-font-face: Arial, sans-serif;
 padding: 6px 15px 6px 15px;
 color:#FFFFFF;
 box-shadow: 1px 1px 3px #505050;
@@ -49,10 +52,17 @@ color:#FFFFFF;
 }
 
 .soundbuttons{
-font-size: 20px;
+font-size: 17px;
 background-color:#2275D4;
 }
 
 #users{
-font-family:Arial;
+text-align:center;
+margin-top:10px;
+margin-left:auto;
+margin-right:auto;
+}
+#users tr:nth-child(odd){ 
+background-color: #555555;
+color:#FFFFFF;
 }
