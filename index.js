@@ -8,7 +8,7 @@ var currentusers = new Array();
 
 
 // allows server to send all files needed for the website
-files=['','index.html','style.css','pop.mp3','qbbuzzer.js','buzzsound.mp3'];
+files=['','index.html','style.css','pop.mp3','socketio.js','qbbuzzer.js','buzzsound.mp3'];
 files.forEach(function(a){
 	app.get('/'+a, function(req, res){
 		res.sendFile(__dirname + '/'+a);
