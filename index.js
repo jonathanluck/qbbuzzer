@@ -23,6 +23,10 @@ app.get('/style.css', function(req, res){
 app.get('/pop.mp3', function(req, res){
   res.sendFile(__dirname + '/pop.mp3');
 });
+
+app.get('/qbbuzzer.js', function(req, res){
+  res.sendFile(__dirname + '/qbbuzzer.js');
+});
 io.on('connection', function(socket){
   socket.on('buzz',function(buzz){
 	if(canbuzz){
