@@ -65,6 +65,7 @@ io.on('connection', function(socket){
 io.on('connection', function(socket){
 socket.on('disconnect', function(){
     socket.broadcast.emit('clear');
+	canbuzz=true;
 });
 });
 
