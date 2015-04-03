@@ -1,16 +1,21 @@
+body{
+font-family: Arial, sans-serif;
+}
+
 button{
 border-radius:5px;
 border-style:none;
-font-size:37px;
+font-size:42px;
 display:block;
 margin-right:auto;
 margin-left:auto;
 margin-top:10px;
-font-face: Arial, sans-serif;
 padding: 6px 15px 6px 15px;
 color:#FFFFFF;
 box-shadow: 1px 1px 3px #505050;
 }
+
+
 
 .default{
 background-color: #F0A911;
@@ -28,6 +33,14 @@ box-shadow: none;
 background-color:#B8B8B8;
 font-color: #000000;
 }
+
+.soundbuttons{
+font-size: 17px;
+background-color:#2275D4;
+}
+
+
+
 #wrapper{
 display:block;
 margin-right:auto;
@@ -48,3 +61,13 @@ margin-left:auto;
 color:#FFFFFF;
 }
 
+#users{
+text-align:center;
+margin-top:10px;
+margin-left:auto;
+margin-right:auto;
+}
+#users tr:nth-child(odd){ 
+background-color: #555555;
+color:#FFFFFF;
+}
