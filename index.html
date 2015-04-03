@@ -2,12 +2,15 @@
 
 <head>
 <link rel="stylesheet" type="text/css" href="style.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
 <script>
   var socket = io();
+  var name = ""
+  $("#container").hide();
   function buzz(){
-	socket.emit("buzz","userbuzzed");
+	socket.emit("buzz",name);
 	return false;
 	
   }
@@ -16,20 +19,41 @@
 	return false;
 	
   }
+  function checkname(){
+	name = prompt('What is your username');
+	socket.emit("check name", name);
+	return false;
+	
+  }
   
   socket.on('locked', function(msg){
     $('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
+	$('#container').show(350).text(msg+ " has buzzed.");
+	$('.clear').hide();
   });
   socket.on('clear', function(msg){
     $('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled",false);
+	$('#container').hide(400).text("");
+	$('.clear').show();
   });
-  
+  socket.on('bad name', function(msg){
+    alert("Username already taken");
+	checkname();
+  });
+  checkname();
 </script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
 </head>
-
-<button id="buzzbutton" class="default" onclick = "buzz()">Buzz</button>
-<br>
-<button class="clear" onclick="clearbuzzer()">Clear</button>
-
+<body>
+	<div id ="wrapper">
+		<div id="container" style="display:none"></div>
+	</div>
+	<button id="buzzbutton" class="default" onclick = "buzz()">
+		Buzz
+	</button>
+	<br>
+	<button class="clear" onclick="clearbuzzer()">
+		Clear
+	</button>
+</body>
 </html>
