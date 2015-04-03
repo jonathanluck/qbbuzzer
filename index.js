@@ -15,20 +15,14 @@ function checkname(testname){
 
 }
 
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+
+files=['','style.css','pop.mp3','qbbuzzer.js'];
+files.forEach(function(a){
+	app.get('/'+a, function(req, res){
+		res.sendFile(__dirname + '/'+a);
+	});
 });
 
-app.get('/style.css', function(req, res){
-  res.sendFile(__dirname + '/style.css');
-});
-app.get('/pop.mp3', function(req, res){
-  res.sendFile(__dirname + '/pop.mp3');
-});
-
-app.get('/qbbuzzer.js', function(req, res){
-  res.sendFile(__dirname + '/qbbuzzer.js');
-});
 io.on('connection', function(socket){
   socket.on('buzz',function(buzz){
 	if(canbuzz){
@@ -38,7 +32,6 @@ io.on('connection', function(socket){
 		canbuzz = false
 	}
   })
-  
 });
 
 io.on('connection', function(socket){
