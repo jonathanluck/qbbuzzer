@@ -3,6 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var canbuzz = true;
 var names = [""];
+var currentbuzzer = "";
 function checkname(testname){
 
 	for (i =0;i<names.length;i++){
@@ -33,7 +34,7 @@ io.on('connection', function(socket){
 	if(canbuzz){
 		socket.broadcast.emit('locked',buzz);
 		io.sockets.connected[socket.id].emit('your buzz', buzz)
-		
+		currentbuzzer= buzz;
 		canbuzz = false
 	}
   })
@@ -44,6 +45,7 @@ io.on('connection', function(socket){
  socket.on('clear',function(buzz){
 	io.sockets.connected[socket.id].emit('clear',buzz);
 	socket.broadcast.emit('clear',buzz);
+	currentbuzzer="";
 	canbuzz = true
   })
   
@@ -55,6 +57,9 @@ io.on('connection', function(socket){
 	if(checkname(name)){
 		names[names.length] = name;
 		io.sockets.connected[socket.id].emit('good name', name);
+		if (!canbuzz){
+			io.sockets.connected[socket.id].emit('locked', currentbuzzer);
+		}
 	}
 	else{
 		 io.sockets.connected[socket.id].emit('bad name', '');
