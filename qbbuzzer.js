@@ -78,6 +78,7 @@ socket.on('clear', function(msg){
 
 socket.on('good name', function(msg){
 	$("#users").append("<p> Your username is: "+msg+"</p>");
+	$(document).attr("title","QBBuzzer - "+msg)
 });
 
 socket.on('bad name', function(msg){
