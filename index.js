@@ -25,6 +25,8 @@ io.on('connection', function(socket){
   socket.on('buzz',function(buzz){
 	if(canbuzz){
 		socket.broadcast.emit('locked',buzz);
+		io.sockets.connected[socket.id].emit('your buzz', buzz)
+		
 		canbuzz = false
 	}
   })
@@ -33,6 +35,7 @@ io.on('connection', function(socket){
 
 io.on('connection', function(socket){
  socket.on('clear',function(buzz){
+	io.sockets.connected[socket.id].emit('clear',buzz);
 	socket.broadcast.emit('clear',buzz);
 	canbuzz = true
   })
@@ -45,7 +48,7 @@ io.on('connection', function(socket){
 		names[names.length] = name;
 	}
 	else{
-		socket.emit('bad name',"");
+		 io.sockets.connected[socket.id].emit('bad name', '');
 	}
   })
   
