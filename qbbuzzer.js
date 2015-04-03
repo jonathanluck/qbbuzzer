@@ -1,5 +1,8 @@
 var socket = io();
-var name = ""
+var name = "";
+var playsound = true;
+var sound = "pop";
+var audio = document.getElementById("sound");
 $("#container").hide();
 $('.clear').hide();
 function buzz(){
@@ -8,28 +11,63 @@ return false;
 
 }
 function clearbuzzer(){
-socket.emit("clear","asdf");
+socket.emit("clear","");
 return false;
 
 }
 function checkname(){
-name = prompt('What is your username');
-name = name.trim().replace(/</g,"");
-socket.emit("check name", name);
-return false;
+	name = prompt('What is your username');
+	name = name.trim().replace(/</g,"");
+	socket.emit("check name", name);
+	return false;
 
 }
+
+function togglesound(){
+	playsound = !playsound;
+	if(playsound){
+		$("#togglesound").text("Sound: On")
+		$("#changesound").show();
+	}
+	else{
+		$("#togglesound").text("Sound: Off")
+		$("#changesound").hide();
+	}
+	
+}
+
+function playSound(){
+	if (playsound){
+		audio.play();
+	}
+}
+
+function changesound(){
+	if(sound == "pop"){
+		sound = "buzz";
+		audio = document.getElementById("sound2");
+		$("#changesound").text("Sound: Buzz");
+	}
+	else if(sound == "buzz"){
+		sound = "pop";
+		audio = document.getElementById("sound");
+		$("#changesound").text("Sound: Pop");
+	}
+}
+
 
 socket.on('locked', function(msg){
 $('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
 $('#container').show(250).text(msg+ " has buzzed");
 $('.clear').hide();
+playSound();
 });
 
 socket.on('your buzz', function(msg){
 $('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled",true);
 $('.clear').show();
-document.getElementById("sound").play();
+playSound();
+
 });
 
 socket.on('clear', function(msg){
@@ -39,7 +77,7 @@ $('.clear').hide();
 });
 
 socket.on('good name', function(msg){
-$("#wrapper").append("<p> Your username is: "+msg+"</p>");
+$("#users").append("<p> Your username is: "+msg+"</p>");
 });
 socket.on('bad name', function(msg){
 alert("Username already taken");
