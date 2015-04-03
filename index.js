@@ -23,29 +23,30 @@ files.forEach(function(a){
 	});
 });
 
-io.on('connection', function(socket){
-  socket.on('buzz',function(buzz){
+function socketOn(str, func){
+	io.on('connection', function(socket){
+		socket.on(str,func);
+	});
+}
+
+
+socketOn('buzz',function(buzz){
 	if(canbuzz){
 		socket.broadcast.emit('locked',buzz);
 		io.sockets.connected[socket.id].emit('your buzz', buzz)
 		currentbuzzer= buzz;
 		canbuzz = false
 	}
-  })
 });
 
-io.on('connection', function(socket){
- socket.on('clear',function(buzz){
+socketOn('clear',function(buzz){
 	io.sockets.connected[socket.id].emit('clear',buzz);
 	socket.broadcast.emit('clear',buzz);
 	currentbuzzer="";
 	canbuzz = true
-  })
-  
 });
 
-io.on('connection', function(socket){
- socket.on('check name',function(name){
+socketOn('check name',function(name){
 
 	if(checkname(name)){
 		names[names.length] = name;
@@ -57,9 +58,7 @@ io.on('connection', function(socket){
 	else{
 		 io.sockets.connected[socket.id].emit('bad name', '');
 	}
-  })
-  
-});
+  });
 io.on('connection', function(socket){
 socket.on('disconnect', function(){
     socket.broadcast.emit('clear');
