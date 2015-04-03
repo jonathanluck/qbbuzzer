@@ -4,6 +4,7 @@ var io = require('socket.io')(http);
 var canbuzz = true;
 var names = [""];
 function checkname(testname){
+
 	for (i =0;i<names.length;i++){
 		if(names[i]== testname){
 			return false;
@@ -50,8 +51,10 @@ io.on('connection', function(socket){
 
 io.on('connection', function(socket){
  socket.on('check name',function(name){
+
 	if(checkname(name)){
 		names[names.length] = name;
+		io.sockets.connected[socket.id].emit('good name', name);
 	}
 	else{
 		 io.sockets.connected[socket.id].emit('bad name', '');
@@ -59,7 +62,13 @@ io.on('connection', function(socket){
   })
   
 });
+io.on('connection', function(socket){
+socket.on('disconnect', function(){
+    socket.broadcast.emit('clear');
+});
+});
 
-http.listen(4802, function(){
-  console.log('listening on *:4802');
+
+http.listen(8080, function(){
+  console.log('listening on *:8080');
 });
