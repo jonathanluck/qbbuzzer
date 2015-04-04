@@ -19,7 +19,6 @@ function clearbuzzer(){
 
 function checkname(){
 	name = prompt('What is your username');
-	name = name.trim().replace(/</g,"");
 	socket.emit("check name", name);
 	return false;
 }

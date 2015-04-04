@@ -24,7 +24,7 @@ http.listen(8080, function(){
 
 // sanitizes the name then checks if it is already being used
 function checkname(testname){
-	testname = testname.trim().replace(/</g,"");
+	testname = testname.trim().replace(/[<'"]/g,"")
 	for (i =0;i<names.length;i++){
 		if(names[i]== testname){
 			return false;
@@ -67,7 +67,7 @@ io.on('connection', function(socket){
 	// if the name is already used, then rejects the name
 	socket.on('check name',function(name){
 		if(checkname(name)){
-			name = name.trim().replace(/</g,"");
+			name = name.trim().replace(/[<'"]/g,"")
 			io.sockets.connected[socket.id].emit('good name', name);
 			if (!canbuzz){
 				io.sockets.connected[socket.id].emit('locked', currentbuzzer);
