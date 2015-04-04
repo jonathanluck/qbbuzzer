@@ -41,9 +41,9 @@ files.forEach(function(a){
 });
 
 
-// recieves a buzz
-// sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz
 io.on('connection', function(socket){
+	// recieves a buzz
+	// sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz
 	socket.on('buzz',function(buzz){
 		if(canbuzz){
 			socket.broadcast.emit('locked',buzz);
@@ -52,23 +52,19 @@ io.on('connection', function(socket){
 			canbuzz = false
 		}
 	});
-});
-// sends a clear signal to all clients and allows anyone to buzz again
-io.on('connection', function(socket){
+	
+	// sends a clear signal to all clients and allows anyone to buzz again
 	socket.on('clear',function(buzz){
 		io.sockets.connected[socket.id].emit('clear',buzz);
 		socket.broadcast.emit('clear',buzz);
 		currentbuzzer="";
 		canbuzz = true
 	});
-});
 
-
-// checks if a name is useable. locks the buzzer if someone has already buzzed. 
-// broadcasts to all clients to add the new name
-// adds all current names to new client
-// if the name is already used, then rejects the name
-io.on('connection', function(socket){
+	// checks if a name is useable. locks the buzzer if someone has already buzzed. 
+	// broadcasts to all clients to add the new name
+	// adds all current names to new client
+	// if the name is already used, then rejects the name
 	socket.on('check name',function(name){
 		if(checkname(name)){
 			name = name.trim().replace(/</g,"");
@@ -87,20 +83,14 @@ io.on('connection', function(socket){
 			 io.sockets.connected[socket.id].emit('bad name', '');
 		}
 	});
-});
-  
-io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		socket.broadcast.emit('clear');
 		canbuzz=true;
 	});
-});
-
-
-// clears the buzzer when a user that has buzzed disconnects
-// sends a message to all clients telling them to remove disconnected client from their lists
-// frees up the username from the list of names
-io.on('connection', function(socket){
+	
+	// clears the buzzer when a user that has buzzed disconnects
+	// sends a message to all clients telling them to remove disconnected client from their lists
+	// frees up the username from the list of names
 	socket.on('disconnect', function(){
 		var name = currentusers[socket.id];
 		if(name == currentbuzzer){
