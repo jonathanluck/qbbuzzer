@@ -3,17 +3,26 @@ var name = "";
 var playsound = true;
 var sound = "pop";
 var audio = document.getElementById("sound");
+var buzzed=false;
 $("#container").hide();
 $('.clear').hide();
-
+window.addEventListener("keydown",function(a){
+	if(a.which==32)
+		if(!buzzed)
+			buzz()
+		else
+			clearbuzzer();
+});
 
 function buzz(){
 	socket.emit("buzz",name);
+	buzzed=true;
 	return false;
 }
 
 function clearbuzzer(){
 	socket.emit("clear","");
+	buzzed=false;
 	return false;
 }
 
@@ -56,6 +65,7 @@ function changesound(){
 
 
 
+
 socket.on('locked', function(msg){
 	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
 	$('#container').text(msg+ " has buzzed").show(250);
@@ -66,6 +76,7 @@ socket.on('locked', function(msg){
 socket.on('your buzz', function(msg){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled",true);
 	$('.clear').show();
+	setTimeout(clearbuzzer,5000);
 	playSound();
 });
 
