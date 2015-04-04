@@ -4,6 +4,7 @@ var playsound = true;
 var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed=false;
+var timeoutID;
 $("#container").hide();
 $('.clear').hide();
 window.addEventListener("keydown",function(a){
@@ -21,6 +22,8 @@ function buzz(){
 }
 
 function clearbuzzer(){
+	console.log("clearsss");
+	clearTimeout(timeoutID);
 	socket.emit("clear","");
 	buzzed=false;
 	return false;
@@ -76,7 +79,7 @@ socket.on('locked', function(msg){
 socket.on('your buzz', function(msg){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled",true);
 	$('.clear').show();
-	setTimeout(clearbuzzer,5000);
+	timeoutID=setTimeout(clearbuzzer,5000);
 	playSound();
 });
 
