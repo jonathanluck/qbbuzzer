@@ -51,8 +51,8 @@ io.on('connection', function(socket){
 	socket.on('buzz',function(buzz){
 		var name = roomsandnames[socket.room][roomsandnames[socket.room].indexOf(currentusers[socket.id])];
 		if(canbuzz[socket.room]){
-			socket.broadcast.to(socket.room).emit('locked',name);
-			io.sockets.connected[socket.id].emit('your buzz', name)
+			socket.broadcast.to(socket.room).emit('locked',name,(new Date(Date.now())+"").substring(16,24));
+			io.sockets.connected[socket.id].emit('your buzz', name,(new Date(Date.now())+"").substring(16,24))
 			currentbuzzer[socket.room]= name;
 			canbuzz[socket.room] = false
 		}

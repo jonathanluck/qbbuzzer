@@ -75,18 +75,20 @@ function changesound(){
 
 
 
-socket.on('locked', function(msg){
+socket.on('locked', function(msg,time){
 	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
 	$('#container').text(msg+ " has buzzed").show(250);
 	$('.clear').hide();
 	playSound();
+	$("#history").prepend("<div class='history'>"+time+" - "+msg+"</div>")
 });
 
-socket.on('your buzz', function(msg){
+socket.on('your buzz', function(msg,time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled",true);
 	$('.clear').show();
 	timeoutID=setTimeout(clearbuzzer,5000);
 	playSound();
+	$("#history").prepend("<div class='history'><b>"+time+" - "+msg+"</b></div>")
 });
 
 socket.on('clear', function(msg){

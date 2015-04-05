@@ -38,7 +38,11 @@ font-color: #000000;
 font-size: 17px;
 background-color:#2275D4;
 }
-
+.history{
+text-align: left;
+font-size:15px;
+padding-left:5px;
+}
 
 
 #wrapper{
@@ -67,7 +71,7 @@ margin-top:10px;
 margin-left:auto;
 margin-right:auto;
 }
-#users tr:nth-child(odd){ 
+#users tr:nth-child(even){ 
 background-color: #555555;
 color:#FFFFFF;
 }
@@ -79,5 +83,26 @@ margin-right:auto;
 margin-left:auto;
 color:#FFF;
 width:200px;
-padding: 5px 5px 5px 5px;
+padding: 3px 3px 3px 3px;
+overflow-x:hidden;
+}
+
+#history{
+margin-top:10px;
+margin-left:auto;
+margin-right:auto;
+padding-left:2px;
+width:400;
+height:200;
+overflow-y:scroll;
+overflow-x:hidden;
+}
+
+#history div:nth-child(even){
+margin-top:2px;
+margin-bottom:2px;
+padding-top:2px;
+padding-bottom:2px;
+background-color: #555555;
+color:#FFFFFF;
 }
