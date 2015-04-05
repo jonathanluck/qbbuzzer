@@ -27,6 +27,10 @@ http.listen(8080, function(){
 // sanitizes the name then checks if it is already being used
 function checkname(testname,room){
 	testname = sanitize(testname);
+	room = sanitize(room);
+	if (room.length<1){
+		room = "default";
+	}
 	for (i =0;i<roomsandnames[room].length;i++){
 		if(roomsandnames[room][i]== testname){
 			return false;
@@ -36,7 +40,7 @@ function checkname(testname,room){
 }
 // sanitization to prevent XSS attacks
 function sanitize(string){
-	return string.trim().replace(/[<'"]/g,"");
+	return (string+"").trim().replace(/[<'"]/g,"");
 }
 
 
