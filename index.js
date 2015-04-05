@@ -78,6 +78,7 @@ io.on('connection', function(socket){
 				io.sockets.connected[socket.id].emit('locked', currentbuzzer[socket.room]);
 			}
 			socket.broadcast.to(socket.room).emit('add name',name);
+			io.sockets.connected[socket.id].emit('add name', name);
 			roomsandnames[socket.room].forEach(function(a){
 				io.sockets.connected[socket.id].emit('add name', a);
 			});
@@ -106,10 +107,6 @@ io.on('connection', function(socket){
 					rooms[rooms.length]= room;
 					canbuzz[socket.room] = true;
 					roomsandnames[room]=new Array();
-					//roomsandnames[room][0]= 1;
-				}
-				else{
-					//roomsandnames[room][0]++;
 				}
 			}
 			else{

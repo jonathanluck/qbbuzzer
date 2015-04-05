@@ -2,6 +2,7 @@ var socket = io();
 var name = "";
 var room = "default";
 var playsound = true;
+var dispinfo = true;
 var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed=false;
@@ -69,6 +70,19 @@ function changesound(){
 		sound = "pop";
 		audio = document.getElementById("sound");
 		$("#changesound").text("Sound: Pop");
+	}
+}
+
+function toggleinfo(){
+	if(dispinfo){
+		dispinfo = false;
+		$("#infobox").hide();
+		$("#infobutton").text("Show Info");
+	}
+	else{
+		dispinfo = true;
+		$("#infobox").show();
+		$("#infobutton").text("Hide Info");
 	}
 }
 
