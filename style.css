@@ -71,3 +71,13 @@ margin-right:auto;
 background-color: #555555;
 color:#FFFFFF;
 }
+#info{
+background-color:#3B3B3B;
+border-radius:5px;
+margin-top:10px;
+margin-right:auto;
+margin-left:auto;
+color:#FFF;
+width:200px;
+padding: 5px 5px 5px 5px;
+}

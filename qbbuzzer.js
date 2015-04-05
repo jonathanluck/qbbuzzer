@@ -1,12 +1,12 @@
 var socket = io();
 var name = "";
+var room = "default";
 var playsound = true;
 var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed=false;
 var timeoutID;
-$("#container").hide();
-$('.clear').hide();
+
 window.addEventListener("keydown",function(a){
 	if(a.which==32)
 		if(!buzzed)
@@ -22,7 +22,6 @@ function buzz(){
 }
 
 function clearbuzzer(){
-	console.log("clearsss");
 	clearTimeout(timeoutID);
 	socket.emit("clear","");
 	buzzed=false;
@@ -30,10 +29,17 @@ function clearbuzzer(){
 }
 
 function checkname(){
-	name = prompt('What is your username');
+	name = prompt('Enter a username');
 	socket.emit("check name", name);
 	return false;
 }
+
+function getroom(){
+	room = prompt('What room would you like to join?');
+	socket.emit("send room", room);
+	return false;
+}
+
 
 function togglesound(){
 	playsound = !playsound;
@@ -90,13 +96,19 @@ socket.on('clear', function(msg){
 });
 
 socket.on('good name', function(msg){
-	$("#users").append("<p> Your username is: "+msg+"</p>");
-	$(document).attr("title","QBBuzzer - "+msg)
+	name = msg;
+	$("#info").append("<p> Your username is: "+msg+"</p>");
+	$(document).attr("title","QBBuzzer - "+msg +" - "+room)
 });
 
 socket.on('bad name', function(msg){
 	alert("Username already taken");
 	checkname();
+});
+
+socket.on('get room', function(msg){
+	room = msg;
+	$("#info").append("<p> Your room is: "+msg+"</p>");
 });
 
 socket.on('add name', function(msg){
@@ -106,5 +118,7 @@ socket.on('add name', function(msg){
 socket.on('remove name', function(msg){
 	$("#"+msg).remove();
 });
-
+$("#container").hide();
+$('.clear').hide();
+getroom();
 checkname();
