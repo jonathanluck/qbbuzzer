@@ -7,7 +7,7 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="socketio.js"></script>
-	<audio id="sound" src="pop.mp3" preload="auto"></audio>
+	<audio id="sound" src="pop.mp3" preload="auto"></audio><!--CC Attribution 3.0: http://soundbible.com/2067-Blop.html-->
 	<audio id="sound2" src="buzzsound.mp3" preload="auto"></audio>
 	<script src ="qbbuzzer.js"></script>
 </head>
@@ -39,7 +39,12 @@
 		<div id="info"></div>
 		<table id="users"><th>Users:</th></table>
 		<div id="history"></div>
+		<button class ="settings" onclick="$('#history').empty()">
+			Clear History
+		</button><!--Idea credits to KJiang for the clear button... because I am stupid to have not thought of it to begin with-->
 		</div>
 	</div>
 </body>
+
+<!--Written by Jonathan Luck and Kevin Wu (with help from a few others)-->
 </html>
