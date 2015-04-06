@@ -118,7 +118,7 @@ socket.on('good name', function(msg){
 });
 
 socket.on('bad name', function(msg){
-	alert("Username already taken");
+	alert("Invalid name or username already taken");
 	checkname();
 });
 

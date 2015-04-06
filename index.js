@@ -1,10 +1,10 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var canbuzz = new Array();
+var canbuzz = {"default":true};
 var names = [""];
 var rooms = ["default"];
-var roomsandnames = {};
+var roomsandnames = {"default":[""]};
 var currentbuzzer = new Array();
 var currentusers = new Array();
 
@@ -24,11 +24,11 @@ http.listen(8080, function(){
 });
 
 
-// sanitizes the name then checks if it is already being used
+// sanitizes the name then checks if it is already being used for a specific room
 function checkname(testname,room){
 	testname = sanitize(testname);
 	room = sanitize(room);
-	if (room.length<1){
+	if (room.length==0){
 		room = "default";
 	}
 	for (i =0;i<roomsandnames[room].length;i++){
@@ -38,6 +38,17 @@ function checkname(testname,room){
 	}
 	return true;
 }
+function genrandomname(){
+	string = ""
+	chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
+	for (var i = 0; i< Math.round(Math.random()*7)+6;i++){
+		string+= chars.charAt(Math.floor(Math.random()*chars.length));
+	}
+	return string;
+
+}
+
+
 // sanitization to prevent XSS attacks
 function sanitize(string){
 	return (string+"").trim().replace(/[<'"]/g,"");
@@ -71,8 +82,11 @@ io.on('connection', function(socket){
 	// adds all current names to new client
 	// if the name is already used, then rejects the name
 	socket.on('check name',function(name){
+		name = sanitize(name);
+		if(name.length==0){
+			name = genrandomname();
+		}
 		if(checkname(name,socket.room)){
-			name = sanitize(name);
 			io.sockets.connected[socket.id].emit('good name', name);
 			if (!canbuzz[socket.room]){
 				io.sockets.connected[socket.id].emit('locked', currentbuzzer[socket.room]);
