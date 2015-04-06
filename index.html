@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -34,15 +35,22 @@
 		<button id="infobutton" class ="settings" onclick="toggleinfo()">
 			Hide Info
 		</button>
+		<button id="togglehist" class="settings" onclick="togglehistory()">Hide History</button>
 		<br>
 		<div id="infobox">
 		<div id="info"></div>
-		<table id="users"><th>Users:</th></table>
-		<div id="history"></div>
-		<button class ="settings" onclick="$('#history').empty()">
+		<p>Users:</p>
+		<div id="users"></div>
+		</div>
+		<div id="historywrapper">
+			<p>History:</p>
+			<div id="history"></div>
+		</div>
+		<br>
+		<button id="clearhist" class ="settings" onclick="$('#history').empty()">
 			Clear History
 		</button><!--Idea credits to KJiang for the clear button... because I am stupid to have not thought of it to begin with-->
-		</div>
+		
 	</div>
 </body>
 

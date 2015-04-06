@@ -3,6 +3,7 @@ var name = "";
 var room = "default";
 var playsound = true;
 var dispinfo = true;
+var disphist = true;
 var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed=false;
@@ -95,6 +96,20 @@ function toggleinfo(){
 		$("#infobutton").text("Hide Info");
 	}
 }
+function togglehistory(){
+	if(disphist){
+		disphist = false;
+		$("#historywrapper").hide();
+		$("#clearhist").hide();
+		$("#togglehist").text("Show History");
+	}
+	else{
+		disphist = true;
+		$("#historywrapper").show();
+		$("#clearhist").show();
+		$("#togglehist").text("Hide History");
+	}
+}
 
 
 
@@ -138,7 +153,7 @@ socket.on('get room', function(msg){
 });
 
 socket.on('add name', function(msg){
-	$("#users").append("<tr id='"+msg+"'><td>"+msg+"</td></tr>");
+	$("#users").append("<div id='"+msg+"'>"+msg+"</div>");
 });
 
 socket.on('remove name', function(msg){

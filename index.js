@@ -51,10 +51,10 @@ function genrandomname(){
 
 // sanitization to prevent XSS attacks
 function sanitize(string){
-	string = (string+"").trim().replace(/[<'"]/g,"");
+	string = (string+"").trim().replace(/[<'"&;]/g,"");
 	
-	if(string.length>75){
-		return string.substring(0,75);
+	if(string.length>60){
+		return string.substring(0,60);
 	}
 	return string;
 }
