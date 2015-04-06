@@ -51,7 +51,12 @@ function genrandomname(){
 
 // sanitization to prevent XSS attacks
 function sanitize(string){
-	return (string+"").trim().replace(/[<'"]/g,"");
+	string = (string+"").trim().replace(/[<'"]/g,"");
+	
+	if(string.length>75){
+		return string.substring(0,75);
+	}
+	return string;
 }
 
 
@@ -96,13 +101,13 @@ io.on('connection', function(socket){
 			roomsandnames[socket.room].forEach(function(a){
 				io.sockets.connected[socket.id].emit('add name', a);
 			});
-			//roomsandnames[socket.room][roomsandnames[socket.room].length] = name;
 			for (var i=0;i<=roomsandnames[socket.room].length;i++){
 				if(roomsandnames[socket.room][i]==undefined){
 					roomsandnames[socket.room][i] = name;
 					break;
 				}
 			}
+			
 			currentusers[socket.id] = name;
 		}
 		else{

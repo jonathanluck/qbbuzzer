@@ -31,13 +31,23 @@ function clearbuzzer(){
 
 function checkname(){
 	name = prompt('Enter a username');
-	socket.emit("check name", name);
+	if(name=="null"){
+		socket.emit("check name", "");
+	}
+	else{
+		socket.emit("check name", name);
+	}
 	return false;
 }
 
 function getroom(){
 	room = prompt('What room would you like to join?');
-	socket.emit("send room", room);
+	if(room==null){
+		socket.emit("send room", "");
+	}
+	else{
+		socket.emit("send room", room);
+	}
 	return false;
 }
 
