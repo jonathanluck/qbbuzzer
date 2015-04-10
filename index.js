@@ -1,10 +1,13 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var fs = require('fs');
 var canbuzz = {"default":true};
 var names = [""];
 var rooms = ["default"];
 var roomsandnames = {"default":[""]};
+var ips = {"":""};
+var numusers = 0;
 var currentbuzzer = new Array();
 var currentusers = new Array();
 
@@ -62,6 +65,8 @@ function sanitize(string){
 
 
 io.on('connection', function(socket){
+	ips[socket.id] = socket.request.connection.remoteAddress;
+	fs.appendFile('iplog.txt',socket.request.connection.remoteAddress+"\t"+new Date(Date.now())+"\n");
 	// recieves a buzz
 	// sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz
 	socket.on('buzz',function(buzz){
@@ -109,6 +114,8 @@ io.on('connection', function(socket){
 			}
 			
 			currentusers[socket.id] = name;
+			ips[socket.id]+=" - " +name;
+			numusers++;
 		}
 		else{
 			 io.sockets.connected[socket.id].emit('bad name', '');
@@ -154,5 +161,21 @@ io.on('connection', function(socket){
 			delete roomsandnames[room][roomsandnames[room].indexOf(name)];	
 		}
 		delete currentusers[socket.id];
+		delete ips[socket.id];
+		if(numusers>0){
+			numusers--;
+		}
 	});
 });
+
+setInterval(function(){
+	console.log(new Date(Date.now()));
+	console.log("Active users: "+numusers);
+	for(var i = 0; i <Object.keys(ips).length;i++){
+		if(Object.keys(ips)[i].length>0){
+			console.log(Object.keys(ips)[i]+ "\t"+ips[Object.keys(ips)[i]]);
+		}
+	}
+	console.log("");
+	
+},120000);
