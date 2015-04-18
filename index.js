@@ -2,14 +2,11 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
-var canbuzz = {"default":true};
-var names = [""];
-var rooms = ["default"];
-var roomsandnames = {"default":[""]};
+var users = {};
+var rooms = {};
 var ips = {"":""};
-var numusers = 0;
-var currentbuzzer = new Array();
-var currentusers = new Array();
+if (typeof __dirname == "undefined")
+	__dirname = "C:\\Program Files\\nodejs\\qbbuzzer";
 
 
 // allows server to send all files needed for the website
@@ -31,14 +28,9 @@ http.listen(8080, function(){
 function checkname(testname,room){
 	testname = sanitize(testname);
 	room = sanitize(room);
-	if (room.length==0){
+	if (room.length==0)
 		room = "default";
-	}
-	for (i =0;i<roomsandnames[room].length;i++){
-		if(roomsandnames[room][i]== testname){
-			return false;
-		}
-	}
+	room[room]
 	return true;
 }
 function genrandomname(){
@@ -55,14 +47,67 @@ function genrandomname(){
 // sanitization to prevent XSS attacks
 function sanitize(string){
 	string = (string+"").trim().replace(/[<'"&;]/g,"");
-	
-	if(string.length>60){
+	if(string.length>60)
 		return string.substring(0,60);
-	}
 	return string;
 }
 
+function addRoom(room) {
+	if(room.constructor==Room)
+		rooms[room.name]=room;
+}
 
+function Room(name) {
+	this.name = name;
+	this.users = [];
+	this.buzzer="";
+	this.buzz = function(name) {
+		if (this.buzzer=="") {
+			this.buzzer = name;
+			this.users.forEach(function(u){
+				if (u.name == name)
+					u.socket.emit('your buzz', name,(new Date(Date.now())+"").substring(16,24));
+				else
+					u.socket.emit('locked',name,(new Date(Date.now())+"").substring(16,24));
+			});
+		}
+	}
+	this.clear = function() {
+		this.buzzer = "";
+		this.users.forEach(function(u){
+			u.socket.emit('clear',"")
+		});
+	}
+	this.addUser = function(user) {
+		user.socket.emit("add names", JSON.stringify(this.users.map(function(u){
+			return u.name;
+		})));
+		this.users.forEach(function(u){
+			u.socket.emit('add names', '["'+user.name+'"]');
+		})
+		this.users.push(user);
+	}
+	this.removeUser = function(user) {
+		if (this.buzzer==user.name)
+			this.clear();
+		for (var i = 0; i < this.users.length; i++) 
+			if (this.users[i]==user)
+				this.users.splice(i,1);
+		this.users.forEach(function(u){
+			u.socket.emit('remove name', user.name, (new Date(Date.now())+"").substring(16,24));
+		})
+	}
+}
+
+
+function User(name, socketID, roomName) {
+	users[socketID] = this;
+	if (typeof rooms[roomName] == "undefined")
+		addRoom(new Room(roomName));
+	this.room = rooms[roomName];
+	this.name = name;
+	this.socket = io.sockets.connected[socketID];
+}
 
 io.on('connection', function(socket){
 	ips[socket.id] = socket.request.connection.remoteAddress;
@@ -70,21 +115,12 @@ io.on('connection', function(socket){
 	// recieves a buzz
 	// sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz
 	socket.on('buzz',function(buzz){
-		var name = roomsandnames[socket.room][roomsandnames[socket.room].indexOf(currentusers[socket.id])];
-		if(canbuzz[socket.room]){
-			socket.broadcast.to(socket.room).emit('locked',name,(new Date(Date.now())+"").substring(16,24));
-			io.sockets.connected[socket.id].emit('your buzz', name,(new Date(Date.now())+"").substring(16,24))
-			currentbuzzer[socket.room]= name;
-			canbuzz[socket.room] = false
-		}
+		users[socket.id].room.buzz(users[socket.id].name);
 	});
 	
 	// sends a clear signal to all clients and allows anyone to buzz again
 	socket.on('clear',function(buzz){
-		io.sockets.connected[socket.id].emit('clear',"");
-		socket.broadcast.to(socket.room).emit('clear',"");
-		currentbuzzer[socket.room]="";
-		canbuzz[socket.room] = true
+		users[socket.id].room.clear();
 	});
 
 	// checks if a name is useable. locks the buzzer if someone has already buzzed. 
@@ -98,24 +134,8 @@ io.on('connection', function(socket){
 		}
 		if(checkname(name,socket.room)){
 			io.sockets.connected[socket.id].emit('good name', name);
-			if (!canbuzz[socket.room]){
-				io.sockets.connected[socket.id].emit('locked', currentbuzzer[socket.room]);
-			}
-			socket.broadcast.to(socket.room).emit('add name',name);
-			io.sockets.connected[socket.id].emit('add name', name);
-			roomsandnames[socket.room].forEach(function(a){
-				io.sockets.connected[socket.id].emit('add name', a);
-			});
-			for (var i=0;i<=roomsandnames[socket.room].length;i++){
-				if(roomsandnames[socket.room][i]==undefined){
-					roomsandnames[socket.room][i] = name;
-					break;
-				}
-			}
-			
-			currentusers[socket.id] = name;
-			ips[socket.id]+=" - " +name;
-			numusers++;
+			var user = new User(name, socket.id, socket.room);
+			user.room.addUser(user);
 		}
 		else{
 			 io.sockets.connected[socket.id].emit('bad name', '');
@@ -129,11 +149,6 @@ io.on('connection', function(socket){
 				socket.room = room;
 				socket.join(room);
 				io.sockets.connected[socket.id].emit('get room', room);
-				if(rooms.indexOf(room) == -1){
-					rooms[rooms.length]= room;
-					canbuzz[socket.room] = true;
-					roomsandnames[room]=new Array();
-				}
 			}
 			else{
 				socket.room = "default";
@@ -146,36 +161,23 @@ io.on('connection', function(socket){
 	// sends a message to all clients telling them to remove disconnected client from their lists
 	// frees up the username from the list of names
 	socket.on('disconnect', function(){
-		var name = currentusers[socket.id];
-		var room = socket.room;
-		
-		
-		if(name == currentbuzzer[socket.room]){
-			socket.broadcast.to(socket.room).emit('clear');
-			canbuzz[socket.room]=true;
+		var user = users[socket.id];
+		if (typeof user !== 'undefined') {
+			var room = users[socket.id].room;
+			if (typeof room !== 'undefined')
+				room.removeUser(users[socket.id]);
 		}
-		socket.broadcast.to(socket.room).emit('remove name',name);
-
-		
-		if(Object.keys(roomsandnames).indexOf(room)!=-1){
-			delete roomsandnames[room][roomsandnames[room].indexOf(name)];	
-		}
-		delete currentusers[socket.id];
-		delete ips[socket.id];
-		if(numusers>0){
-			numusers--;
-		}
+		delete users[socket.id];
 	});
 });
 
 setInterval(function(){
 	console.log(new Date(Date.now()));
-	console.log("Active users: "+numusers);
+	console.log("Active users: "+users.length);
 	for(var i = 0; i <Object.keys(ips).length;i++){
 		if(Object.keys(ips)[i].length>0){
 			console.log(Object.keys(ips)[i]+ "\t"+ips[Object.keys(ips)[i]]);
 		}
 	}
 	console.log("");
-	
 },120000);

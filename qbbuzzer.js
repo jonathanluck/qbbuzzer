@@ -8,6 +8,7 @@ var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed=false;
 var timeoutID;
+var clearTimer;
 
 window.addEventListener("keydown",function(a){
 	if(a.which==32)
@@ -25,6 +26,7 @@ function buzz(){
 
 function clearbuzzer(){
 	clearTimeout(timeoutID);
+	clearInterval(clearTimer)
 	socket.emit("clear","");
 	buzzed=false;
 	return false;
@@ -114,7 +116,7 @@ function togglehistory(){
 
 
 
-socket.on('locked', function(msg,time){
+socket.on('locked', function(msg, time){
 	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled",true);
 	$('#container').text(msg+ " has buzzed").show(250);
 	$('.clear').hide();
@@ -122,10 +124,13 @@ socket.on('locked', function(msg,time){
 	$("#history").prepend("<div class='history'>"+time+" - "+msg+"</div>")
 });
 
-socket.on('your buzz', function(msg,time){
+socket.on('your buzz', function(msg, time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled",true);
 	$('.clear').show();
-	timeoutID=setTimeout(clearbuzzer,5000);
+	timeoutID=setTimeout(clearbuzzer, 5000);
+	var t = 5;
+	$('.clear').text("Clear 5")
+	clearTimer=setInterval(function(){$('.clear').text("Clear " + (--t))},1000)
 	playSound();
 	$("#history").prepend("<div class='history'><b>"+time+" - "+msg+"</b></div>")
 });
@@ -152,12 +157,16 @@ socket.on('get room', function(msg){
 	$("#info").append("<p> Your room is: "+msg+"</p>");
 });
 
-socket.on('add name', function(msg){
-	$("#users").append("<div id='"+msg+"'>"+msg+"</div>");
+socket.on('add names', function(msg){
+	JSON.parse(msg).forEach(function(name){
+		$("#users").append("<div id='"+name+"'>"+name+"</div>");
+	})
 });
 
-socket.on('remove name', function(msg){
+
+socket.on('remove name', function(msg, time){
 	$("#"+msg).remove();
+	$("#history").prepend("<div class='history'>" + time + " - " + msg + " has left</div>");
 });
 $("#container").hide();
 $('.clear').hide();
