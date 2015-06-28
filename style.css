@@ -24,6 +24,7 @@ button:active {
 .submit {
     font-size: 20px;
     background-color: #2275D4;
+
 }
 .submit:hover {
     background-color: #3e89e0;
@@ -89,7 +90,8 @@ button:active {
     left: 0;
     right: 0;
     top: 30px;
-    width: 100%;
+    width: 500px;
+	max-width: 90%;
     margin: auto;
     font-size: 20px;
 }
@@ -195,10 +197,10 @@ button:active {
 
    button {
 	font-size: 48px;
-	width:100%;
+	width:90%;
 	border-radius: 3px;
-	padding-top: 12px;
-	padding-bottom: 12px;
+	padding-top: 14px;
+	padding-bottom: 14px;
    }
    .settings {
     font-size: 25px;
@@ -206,19 +208,23 @@ button:active {
 	}
 	#infobox{
 	font-size:20px;
-		width:100%;
+		width:90%;
 	}
 	#info{
-		width:100%;
+		width:90%;
 
 	}
 	#historywrapper{
 		font-size:20px;
-		width:100%;
+		width:90%;
 	}
 	#history{
 		
-		width:100%;
+		width:90%;
+	}
+	.submit{
+		
+		width:80%;
 	}
 
 }
