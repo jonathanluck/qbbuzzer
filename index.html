@@ -2,72 +2,90 @@
 <html>
 
 <head>
-	<title>QBBuzzer</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="socketio.js"></script>
-	<audio id="sound" src="pop.mp3" preload="auto"></audio><!--CC Attribution 3.0: http://soundbible.com/2067-Blop.html-->
-	<audio id="sound2" src="buzzsound.mp3" preload="auto"></audio>
-	<script src ="qbbuzzer.js"></script>
-	<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-61778253-1', 'auto');ga('send', 'pageview');</script>
+    <title>QBBuzzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="socketio.js"></script>
+    <audio id="sound" src="pop.mp3" preload="auto"></audio>
+    <!--CC Attribution 3.0: http://soundbible.com/2067-Blop.html-->
+    <audio id="sound2" src="buzzsound.mp3" preload="auto"></audio>
+    <script src="qbbuzzer.js"></script>
+    <script>(function(i, s, o, g, r, a, m){
+        i['GoogleAnalyticsObject'] = r;
+        i[r] = i[r] || function(){
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+        a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-61778253-1', 'auto');
+    ga('send', 'pageview');</script>
 </head>
 
 
 <body>
-	<div id ="wrapper">
-		<div id="popup">
-			
-		</div>
-		<div class="inputforms" id = "roomname" >
-			Enter the room you would like to connect to. Leaving this blank will connect you to room <i>default</i>
-			<br>
-			<br>
-			<input id="roomnameinput" placeholder = "room name"></input> <button class="submit" onclick="enterroom()">Submit</button>
-		</div>
-		<div class="inputforms" id ="username" style="display:none">
-			Enter your username. Leaving this blank will assign you a random username
-			<br>
-			<br>
-			<input id="usernameinput" placeholder = "username"></input> <button class="submit" onclick="entername()">Submit</button>
-		</div>
-		<div id="container" style="display:none"></div>
-		<br>
-		<button id="buzzbutton" class="default" onclick = "buzz()">
-			Buzz
-		</button>
-		<br>
-		<button class="clear" onclick="clearbuzzer()" style="display:none">
-			Clear
-		</button>
+<div id="wrapper">
+    <div id="popup">
 
-		<button id="togglesound" class ="settings" onclick="togglesound()">
-			Sound: On
-		</button>
-		<button id="changesound" class ="settings" onclick="changesound()" >
-			Sound: Pop
-		</button>
-		<button id="infobutton" class ="settings" onclick="toggleinfo()">
-			Hide Info
-		</button>
-		<button id="togglehist" class="settings" onclick="togglehistory()">Hide History</button>
-		<br>
-		<div id="infobox">
-		<div id="info"></div>
-		<p>Users:</p>
-		<div id="users"></div>
-		</div>
-		<div id="historywrapper">
-			<p>History:</p>
-			<div id="history"></div>
-		</div>
-		<br>
-		<button id="clearhist" class ="settings" onclick="$('#history').empty()">
-			Clear History
-		</button><!--Idea credits to KJiang for the clear button... because I am stupid to have not thought of it to begin with-->
-		
-	</div>
+    </div>
+    <div class="inputforms" id="roomname">
+        Enter the room you would like to connect to. Leaving this blank will connect you to room <i>default</i>
+        <br>
+        <br>
+        <input id="roomnameinput" placeholder="room name" autofocus></input>
+        <button class="submit" onclick="enterroom()">Submit</button>
+    </div>
+    <div class="inputforms" id="username" style="display:none">
+        Enter your username. Leaving this blank will assign you a random username
+        <br>
+        <br>
+        <input id="usernameinput" placeholder="username" autofocus></input>
+        <button class="submit" onclick="entername()">Submit</button>
+    </div>
+    <div id="container" style="display:none"></div>
+    <br>
+    <button id="buzzbutton" class="default" onclick="buzz()">
+        Buzz
+    </button>
+    <br>
+    <button class="clear" onclick="clearbuzzer()" style="display:none">
+        Clear
+    </button>
+
+    <button id="togglesound" class="settings" onclick="togglesound()">
+        Sound: On
+    </button>
+    <button id="changesound" class="settings" onclick="changesound()">
+        Sound: Pop
+    </button>
+    <button id="infobutton" class="settings" onclick="toggleinfo()">
+        Hide Info
+    </button>
+    <button id="togglehist" class="settings" onclick="togglehistory()">Hide History</button>
+    <br>
+
+    <div id="infobox">
+        <div id="info"></div>
+        <p>Users:</p>
+
+        <div id="users"></div>
+    </div>
+    <div id="historywrapper">
+        <p>History:</p>
+
+        <div id="history"></div>
+    </div>
+    <br>
+    <button id="clearhist" class="settings" onclick="$('#history').empty()">
+        Clear History
+    </button>
+    <!--Idea credits to KJiang for the clear button... because I am stupid to have not thought of it to begin with-->
+
+</div>
 </body>
 
 <!--Written by Jonathan Luck and Kevin Wu (with help from a few others)-->

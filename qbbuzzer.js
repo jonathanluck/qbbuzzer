@@ -84,6 +84,7 @@ function enterroom(){
 	}
 	$("#roomname").remove();
 	$("#username").show();
+	$("#usernameinput").focus();
 	getroom();
 }
 function getroom(){
