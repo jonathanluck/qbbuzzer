@@ -21,12 +21,13 @@ box-shadow: 1px 1px 2px #505050;
 
 
 .submit{
-font-size:15px;
+font-size: 20px;
 background-color:#2275D4;
 
 }
 .default{
 background-color: #F0A911;
+
 }
 .buzzed{
 background-color: #11ba1f;
@@ -63,19 +64,23 @@ z-index:1;
 }
 .inputforms{
 z-index: 2;
-padding: 5px 5px 5px 5px;
+padding: 10px 10px 10px 10px;
 opacity:1;
 background-color: #FFFFFF;
 border-width:3px;
 border-color:#000000;
-border-radius:5px;
 position: fixed;
 left: 0;
 right: 0;
 top: 30px;
-width: 600px;     
+width: 100%;     
 margin: auto;   
-max-width: 100%;
+font-size: 20px;
+}
+.inputforms input{
+height: 30px;
+font-size: 20px;
+padding-left: 10px;
 }
 #wrapper{
 display:block;
