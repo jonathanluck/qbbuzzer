@@ -10,13 +10,42 @@ var buzzed = false;
 var timeoutID;
 var clearTimer;
 
-window.addEventListener("keydown", function(a){
-	if (a.which == 32)
-		if (!buzzed)
-			buzz()
-		else
-			clearbuzzer();
-});
+function entername(){
+	if (document.getElementById("usernameinput").value.length > 0) {
+		name = document.getElementById("usernameinput").value;
+	}
+	else {
+		name = ""
+	}
+	$("#username").remove();
+	$("#popup").remove();
+	checkname();
+}
+function checkname(){
+	if (name == "null")
+		socket.emit("check name", "");
+	else
+		socket.emit("check name", name);
+	return false;
+}
+function enterroom(){
+	if (document.getElementById("roomnameinput").value.length > 0)
+		room = document.getElementById("roomnameinput").value;
+	else
+		room = "default"
+	$("#roomname").remove();
+	$("#username").show();
+	$("#usernameinput").focus();
+	getroom();
+}
+function getroom(){
+	if (room == null)
+		socket.emit("send room", "");
+	else
+		socket.emit("send room", room);
+	return false;
+}
+
 $(document).ready(function(){
 	$('#roomnameinput').keypress(
 		function(e){
@@ -41,6 +70,22 @@ $(document).ready(function(){
 
 });
 
+function newEle(ele, text){
+	ele = document.createElement(ele);
+	$(ele).text(text);
+	return ele;
+}
+
+window.addEventListener("keydown", function(a){
+	if (a.which == 32) {
+		a.preventDefault();
+		if (!buzzed)
+			buzz()
+		else
+			clearbuzzer();
+	}
+});
+
 function buzz(){
 	socket.emit("buzz", name);
 	buzzed = true;
@@ -54,48 +99,7 @@ function clearbuzzer(){
 	buzzed = false;
 	return false;
 }
-function entername(){
-	if (document.getElementById("usernameinput").value.length > 0) {
-		name = document.getElementById("usernameinput").value;
-	}
-	else {
-		name = ""
-	}
-	$("#username").remove();
-	$("#popup").remove();
-	checkname();
-}
-function checkname(){
 
-	if (name == "null") {
-		socket.emit("check name", "");
-	}
-	else {
-		socket.emit("check name", name);
-	}
-	return false;
-}
-function enterroom(){
-	if (document.getElementById("roomnameinput").value.length > 0) {
-		room = document.getElementById("roomnameinput").value;
-	}
-	else {
-		room = "default"
-	}
-	$("#roomname").remove();
-	$("#username").show();
-	$("#usernameinput").focus();
-	getroom();
-}
-function getroom(){
-	if (room == null) {
-		socket.emit("send room", "");
-	}
-	else {
-		socket.emit("send room", room);
-	}
-	return false;
-}
 
 function togglesound(){
 	playsound = !playsound;
@@ -110,9 +114,8 @@ function togglesound(){
 }
 
 function playSound(){
-	if (playsound) {
+	if (playsound)
 		audio.play();
-	}
 }
 
 function changesound(){
@@ -165,7 +168,7 @@ socket.on('locked', function(msg, time){
 
 socket.on('your buzz', function(msg, time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
-	$('.clear').css('visibility','visible');
+	$('.clear').css('visibility', 'visible');
 	timeoutID = setTimeout(clearbuzzer, 5000);
 	var t = 5;
 	$('.clear').text("Clear 5")
@@ -179,16 +182,14 @@ socket.on('your buzz', function(msg, time){
 socket.on('clear', function(msg){
 	$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled", false);
 	$('#container').text("").hide(350);
-	$('.clear').css('visibility','hidden');
+	$('.clear').css('visibility', 'hidden');
 });
 
 socket.on('good name', function(msg){
 	name = msg;
-	$("#info").append("<p></p>");
-	$("#info").children().last().text("Your username is: "+ msg);
+	$("#info").append(newEle("p", "Your username is: " + msg));
 	$(document).attr("title", "QBBuzzer - " + msg + " - " + room)
-	$("#users").prepend("<div></div>");
-	$("#users").children().first().text(msg);
+	$("#users").prepend(newEle("div", msg));
 });
 
 socket.on('bad name', function(msg){
@@ -198,26 +199,27 @@ socket.on('bad name', function(msg){
 
 socket.on('get room', function(msg){
 	room = msg;
-	$("#info").append("<p></p>");
-	$("#info").children().last().text("Your room is: " + msg);
+	$("#info").append(newEle("p", "Your room is: " + msg));
 });
 
 socket.on('add names', function(msg, id, isNew, time){
-	id  = JSON.parse(id);
-	JSON.parse(msg).forEach(function(name,index){
+	id = JSON.parse(id);
+	JSON.parse(msg).forEach(function(name, index){
 		$("#users").append("<div id='" + id[index] + "'></div>");
-		$("#"+id[index]).text(name);
+		$("#" + id[index]).text(name);
 	})
-	if (isNew){
-		$("#history").prepend("<div class='history'></div>");
-		$("#history").children().first().text(time + " - " + JSON.parse(msg)[0] + " has joined");
+	if (isNew) {
+		var ele = newEle("div", time + " - " + JSON.parse(msg)[0] + " has joined");
+		ele.class = 'history';
+		$("#history").prepend(ele);
 	}
 });
 
-socket.on('remove name', function(msg, time,id){
-	$("#history").prepend("<div class='history'></div>");
-	$("#history").children().first().text(time + " - " + msg + " has left");
-	$("#"+id).remove();
+socket.on('remove name', function(msg, time, id){
+	var ele = newEle("div", time + " - " + msg + " has left");
+	ele.class = 'history';
+	$("#history").prepend(ele);
+	$("#" + id).remove();
 });
 $("#container").hide();
 $('.clear').hide();
