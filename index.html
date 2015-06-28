@@ -28,33 +28,32 @@
 
 
 <body>
-<div id="wrapper">
-    <div id="popup">
+	<div id ="wrapper">
+		<div id="popup">
 
+		</div>
+		<div class="inputforms" id = "roomname" >
+			Enter the room you would like to connect to. Leaving this blank will connect you to room <i>default</i>
+			<br>
+			<br>
+			<input id="roomnameinput" placeholder = "room name" autofocus></input> <button class="submit" onclick="enterroom()">Submit</button>
+		</div>
+		<div class="inputforms" id ="username" style="display:none">
+			Enter your username. Leaving this blank will assign you a random username
+			<br>
+			<br>
+			<input id="usernameinput" placeholder = "username"></input> <button class="submit" onclick="entername()">Submit</button>
+		</div>
+		<div id="container" style="display:none"></div>
+		<br>
+		<button id="buzzbutton" class="default" onclick = "buzz()">
+			Buzz
+		</button>
+		<br>
+		<button class="clear" onclick="clearbuzzer()" style="display:none">
+			Clear
+		</button>
     </div>
-    <div class="inputforms" id="roomname">
-        Enter the room you would like to connect to. Leaving this blank will connect you to room <i>default</i>
-        <br>
-        <br>
-        <input id="roomnameinput" placeholder="room name" autofocus></input>
-        <button class="submit" onclick="enterroom()">Submit</button>
-    </div>
-    <div class="inputforms" id="username" style="display:none">
-        Enter your username. Leaving this blank will assign you a random username
-        <br>
-        <br>
-        <input id="usernameinput" placeholder="username" autofocus></input>
-        <button class="submit" onclick="entername()">Submit</button>
-    </div>
-    <div id="container" style="display:none"></div>
-    <br>
-    <button id="buzzbutton" class="default" onclick="buzz()">
-        Buzz
-    </button>
-    <br>
-    <button class="clear" onclick="clearbuzzer()" style="display:none">
-        Clear
-    </button>
 
     <button id="togglesound" class="settings" onclick="togglesound()">
         Sound: On
