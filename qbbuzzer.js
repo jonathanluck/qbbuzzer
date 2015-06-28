@@ -165,7 +165,7 @@ socket.on('locked', function(msg, time){
 
 socket.on('your buzz', function(msg, time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
-	$('.clear').show();
+	$('.clear').css('visibility','visible');
 	timeoutID = setTimeout(clearbuzzer, 5000);
 	var t = 5;
 	$('.clear').text("Clear 5")
@@ -179,7 +179,7 @@ socket.on('your buzz', function(msg, time){
 socket.on('clear', function(msg){
 	$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled", false);
 	$('#container').text("").hide(350);
-	$('.clear').hide();
+	$('.clear').css('visibility','hidden');
 });
 
 socket.on('good name', function(msg){
