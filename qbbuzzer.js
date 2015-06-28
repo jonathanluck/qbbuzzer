@@ -1,6 +1,6 @@
 var socket = io();
 var name = "";
-var room = "default";
+var room = "";
 var playsound = true;
 var dispinfo = true;
 var disphist = true;
@@ -17,6 +17,29 @@ window.addEventListener("keydown",function(a){
 		else
 			clearbuzzer();
 });
+$(document).ready(function () {
+	$('#roomnameinput').keypress(
+		function(e){
+			if (!e) e = window.event;
+			var keyCode = e.keyCode || e.which;
+			if (keyCode == '13'){
+			  enterroom()
+			  return false;
+			}
+		});
+	
+	$('#usernameinput').keypress(
+		function(e){
+			if (!e) e = window.event;
+			var keyCode = e.keyCode || e.which;
+			if (keyCode == '13'){
+			  entername();
+			  return false;
+			}
+		}
+	);
+	
+});
 
 function buzz(){
 	socket.emit("buzz",name);
@@ -31,9 +54,19 @@ function clearbuzzer(){
 	buzzed=false;
 	return false;
 }
-
+function entername(){
+	if(document.getElementById("usernameinput").value.length>0){
+		name = document.getElementById("usernameinput").value;
+	}
+	else{
+		name = ""
+	}
+	$("#username").remove();
+	$("#popup").remove();
+	checkname();
+}
 function checkname(){
-	name = prompt('Enter a username');
+	
 	if(name=="null"){
 		socket.emit("check name", "");
 	}
@@ -42,9 +75,18 @@ function checkname(){
 	}
 	return false;
 }
-
+function enterroom(){
+	if(document.getElementById("roomnameinput").value.length>0){
+		room = document.getElementById("roomnameinput").value;
+	}
+	else{
+		room = "default"
+	}
+	$("#roomname").remove();
+	$("#username").show();
+	getroom();
+}
 function getroom(){
-	room = prompt('What room would you like to join?');
 	if(room==null){
 		socket.emit("send room", "");
 	}
@@ -170,5 +212,5 @@ socket.on('remove name', function(msg, time){
 });
 $("#container").hide();
 $('.clear').hide();
-getroom();
-checkname();
+$("#usernameinput").hide()
+
