@@ -42,7 +42,7 @@ function genrandomname(){
 
 // sanitization to prevent XSS attacks
 function sanitize(string){
-	string = (string + "").trim().replace(/[<'"&;]/g, "");
+	string = (string + "").trim();
 	if (string.length > 60)
 		return string.substring(0, 60);
 	return string;
@@ -77,9 +77,11 @@ function Room(name){
 	this.addUser = function(user){
 		user.socket.emit("add names", JSON.stringify(this.users.map(function(u){
 			return u.name;
-		})));
+		})),JSON.stringify(this.users.map(function(u){
+			return u.socket.id;
+		})),false,(new Date(Date.now()) + "").substring(16, 24));
 		this.users.forEach(function(u){
-			u.socket.emit('add names', '["' + user.name + '"]');
+			u.socket.emit('add names', '["' + user.name + '"]', '["' + user.socket.id + '"]',true,(new Date(Date.now()) + "").substring(16, 24));
 		})
 		this.users.push(user);
 	}
@@ -90,7 +92,7 @@ function Room(name){
 			if (this.users[i] == user)
 				this.users.splice(i, 1);
 		this.users.forEach(function(u){
-			u.socket.emit('remove name', user.name, (new Date(Date.now()) + "").substring(16, 24));
+			u.socket.emit('remove name', user.name, (new Date(Date.now()) + "").substring(16, 24),user.socket.id);
 		})
 	}
 }
@@ -129,6 +131,7 @@ io.on('connection', function(socket){
 		}
 		if (checkname(name, socket.room)) {
 			io.sockets.connected[socket.id].emit('good name', name);
+			
 			var user = new User(name, socket.id, socket.room);
 			user.room.addUser(user);
 		}

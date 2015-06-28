@@ -184,8 +184,11 @@ socket.on('clear', function(msg){
 
 socket.on('good name', function(msg){
 	name = msg;
-	$("#info").append("<p> Your username is: " + msg + "</p>");
+	$("#info").append("<p></p>");
+	$("#info").children().last().text("Your username is: "+ msg);
 	$(document).attr("title", "QBBuzzer - " + msg + " - " + room)
+	$("#users").prepend("<div></div>");
+	$("#users").children().first().text(msg);
 });
 
 socket.on('bad name', function(msg){
@@ -195,18 +198,26 @@ socket.on('bad name', function(msg){
 
 socket.on('get room', function(msg){
 	room = msg;
-	$("#info").append("<p> Your room is: " + msg + "</p>");
+	$("#info").append("<p></p>");
+	$("#info").children().last().text("Your room is: " + msg);
 });
 
-socket.on('add names', function(msg){
-	JSON.parse(msg).forEach(function(name){
-		$("#users").append("<div id='" + name + "'>" + name + "</div>");
+socket.on('add names', function(msg, id, isNew, time){
+	id  = JSON.parse(id);
+	JSON.parse(msg).forEach(function(name,index){
+		$("#users").append("<div id='" + id[index] + "'></div>");
+		$("#"+id[index]).text(name);
 	})
+	if (isNew){
+		$("#history").prepend("<div class='history'></div>");
+		$("#history").children().first().text(time + " - " + JSON.parse(msg)[0] + " has joined");
+	}
 });
 
-socket.on('remove name', function(msg, time){
-	$("#" + msg).remove();
-	$("#history").prepend("<div class='history'>" + time + " - " + msg + " has left</div>");
+socket.on('remove name', function(msg, time,id){
+	$("#history").prepend("<div class='history'></div>");
+	$("#history").children().first().text(time + " - " + msg + " has left");
+	$("#"+id).remove();
 });
 $("#container").hide();
 $('.clear').hide();
