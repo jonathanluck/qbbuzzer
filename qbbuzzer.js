@@ -4,6 +4,7 @@ var room = "";
 var playsound = true;
 var dispinfo = true;
 var disphist = true;
+var dispsettings = false;
 var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed = false;
@@ -143,6 +144,28 @@ function toggleinfo(){
 		$("#infobutton").text("Hide Info");
 	}
 }
+
+function togglesettings(){
+	if (dispsettings) {
+		dispsettings = false;
+		$("#togglesound").hide();
+		$("#changesound").hide();
+		$("#infobutton").hide();
+		$("#togglehist").hide();
+		
+		
+		$("#togglesettings").text("Show Settings");
+	}
+	else {
+		dispsettings = true;
+		$("#togglesound").show();
+		$("#changesound").show();
+		$("#infobutton").show();
+		$("#togglehist").show();
+		$("#togglesettings").text("Hide Settings");
+	}
+}
+
 function togglehistory(){
 	if (disphist) {
 		disphist = false;
