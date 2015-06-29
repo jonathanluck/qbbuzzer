@@ -4,6 +4,7 @@
 <head>
     <title>QBBuzzer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8"> 
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
@@ -50,7 +51,7 @@
 			Buzz
 		</button>
 		<br>
-		<button class="clear" onclick="clearbuzzer()" style="visibility: hidden">
+		<button class="clear" onclick="clearbuzzer()">
 			Clear
 		</button>
     </div>
@@ -84,7 +85,7 @@
     <button id="clearhist" class="settings" onclick="$('#history').empty()">
         Clear History
     </button>
-    <!--Idea credits to KJiang for the clear button... because I am stupid to have not thought of it to begin with-->
+    <!--Idea credits to KJiang for the clear history button.-->
 
 </div>
 </body>

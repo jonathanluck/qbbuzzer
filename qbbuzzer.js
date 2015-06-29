@@ -68,6 +68,7 @@ $(document).ready(function(){
 			}
 		}
 	);
+	$('.clear').css('visibility','hidden');
 
 });
 
@@ -184,14 +185,14 @@ function togglehistory(){
 socket.on('locked', function(msg, time){
 	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled", true);
 	$('#container').text(msg + " has buzzed").show(250);
-	$('.clear').hide();
+	$('.clear').css('visibility','hidden');
 	playSound();
 	$("#history").prepend("<div class='history'>" + time + " - " + msg + "</div>")
 });
 
 socket.on('your buzz', function(msg, time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
-	$('.clear').css('visibility', 'visible');
+	$('.clear').css('visibility','visible');
 	timeoutID = setTimeout(clearbuzzer, 5000);
 	var t = 5;
 	$('.clear').text("Clear 5")
@@ -205,7 +206,7 @@ socket.on('your buzz', function(msg, time){
 socket.on('clear', function(msg){
 	$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled", false);
 	$('#container').text("").hide(350);
-	$('.clear').css('visibility', 'hidden');
+	$('.clear').css('visibility','hidden');
 });
 
 socket.on('good name', function(msg){
@@ -245,6 +246,5 @@ socket.on('remove name', function(msg, time, id){
 	$("#" + id).remove();
 });
 $("#container").hide();
-$('.clear').hide();
 $("#usernameinput").hide()
 
