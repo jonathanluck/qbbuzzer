@@ -18,15 +18,17 @@ function entername(){
 	else {
 		name = ""
 	}
-	$("#username").remove();
-	$("#popup").remove();
+
 	checkname();
 }
 function checkname(){
-	if (name == "null")
+	if (name == "null"){
 		socket.emit("check name", "");
-	else
+	}
+	else{
+		console.log(name);
 		socket.emit("check name", name);
+	}
 	return false;
 }
 function enterroom(){
@@ -187,7 +189,9 @@ socket.on('locked', function(msg, time){
 	$('#container').text(msg + " has buzzed").show(250);
 	$('.clear').css('visibility','hidden');
 	playSound();
-	$("#history").prepend("<div class='history'>" + time + " - " + msg + "</div>")
+	var ele = newEle("div", time + " - " + msg +" buzzed");
+	ele.class = "history"
+	$("#history").prepend(ele);
 });
 
 socket.on('your buzz', function(msg, time){
@@ -200,7 +204,7 @@ socket.on('your buzz', function(msg, time){
 		$('.clear').text("Clear " + (--t))
 	}, 1000)
 	playSound();
-	$("#history").prepend("<div class='history'><b>" + time + " - " + msg + "</b></div>")
+	$("#history").prepend("<div class='history'><b>" + time + " - " + msg + " buzzed</b></div>")
 });
 
 socket.on('clear', function(msg){
@@ -214,11 +218,14 @@ socket.on('good name', function(msg){
 	$("#info").append(newEle("p", "Your username is: " + msg));
 	$(document).attr("title", "QBBuzzer - " + msg + " - " + room)
 	$("#users").prepend(newEle("div", msg));
+	$("#username").hide();
+	$("#popup").hide();
 });
 
 socket.on('bad name', function(msg){
+	$("#popup").show();
+	$("#username").show();
 	alert("Invalid name or username already taken");
-	checkname();
 });
 
 socket.on('get room', function(msg){

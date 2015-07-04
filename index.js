@@ -17,9 +17,7 @@ files.forEach(function(a){
 });
 
 // has the server start and listen on port 8080
-http.listen(8080, function(){
-	console.log('listening on *:8080');
-});
+
 
 // sanitizes the name then checks if it is already being used for a specific room
 function checkname(testname, room){
@@ -27,8 +25,15 @@ function checkname(testname, room){
 	room = sanitize(room);
 	if (room.length == 0)
 		room = "default";
-	room[room]
+	if (typeof rooms[room] == "undefined"){ 
+		return false;
+	}
+	if (rooms[room].users.map(function(a){return a.name}).indexOf(testname)>-1){
+		return false;
+	}
 	return true;
+	
+
 }
 function genrandomname(){
 	string = ""
@@ -112,12 +117,14 @@ io.on('connection', function(socket){
 	// recieves a buzz
 	// sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz
 	socket.on('buzz', function(buzz){
-		users[socket.id].room.buzz(users[socket.id].name);
+		if (typeof users[socket.id] != "undefined")
+			users[socket.id].room.buzz(users[socket.id].name);
 	});
 
 	// sends a clear signal to all clients and allows anyone to buzz again
 	socket.on('clear', function(buzz){
-		users[socket.id].room.clear();
+		if (typeof users[socket.id] != "undefined")
+			users[socket.id].room.clear();
 	});
 
 	// checks if a name is useable. locks the buzzer if someone has already buzzed.
@@ -125,33 +132,34 @@ io.on('connection', function(socket){
 	// adds all current names to new client
 	// if the name is already used, then rejects the name
 	socket.on('check name', function(name){
-		name = sanitize(name);
-		if (name.length == 0) {
-			name = genrandomname();
-		}
-		if (checkname(name, socket.room)) {
-			io.sockets.connected[socket.id].emit('good name', name);
-			
-			var user = new User(name, socket.id, socket.room);
-			user.room.addUser(user);
-		}
-		else {
-			io.sockets.connected[socket.id].emit('bad name', '');
-		}
+		
+			name = sanitize(name);
+			if (name.length == 0) {
+				name = genrandomname();
+			}
+			if (checkname(name, socket.room)) {
+				io.sockets.connected[socket.id].emit('good name', name);
+				
+				var user = new User(name, socket.id, socket.room);
+				user.room.addUser(user);
+			}
+			else {
+				io.sockets.connected[socket.id].emit('bad name', '');
+			}
+		
 	});
 
 	socket.on('send room', function(room){
 		room = sanitize(room);
-		if (room.length > 0) {
-			socket.room = room;
-			socket.join(room);
-			io.sockets.connected[socket.id].emit('get room', room);
+		if (room.length == 0) {
+			room = "default"
 		}
-		else {
-			socket.room = "default";
-			socket.join("default");
-			io.sockets.connected[socket.id].emit('get room', "default");
+		if (typeof rooms[room] == "undefined"){
+			addRoom(new Room(room));
 		}
+		socket.room = room;
+		socket.join(room);
+		io.sockets.connected[socket.id].emit('get room', room);
 	});
 
 	// clears the buzzer when a user that has buzzed disconnects
@@ -178,3 +186,8 @@ setInterval(function(){
 	}
 	console.log("");
 }, 120000);
+
+
+http.listen(8080, function(){
+	console.log('listening on *:8080');
+});

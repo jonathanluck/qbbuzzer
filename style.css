@@ -191,6 +191,12 @@ button:active {
     background-color: #555555;
     color: #FFFFFF;
 }
+
+#history div{
+text-align:left;
+padding-left: 2px;
+}
+
 @media only screen and (max-width: 800px) {
 
    button {
