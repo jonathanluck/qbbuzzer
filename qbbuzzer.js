@@ -26,7 +26,6 @@ function checkname(){
 		socket.emit("check name", "");
 	}
 	else{
-		console.log(name);
 		socket.emit("check name", name);
 	}
 	return false;

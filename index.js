@@ -62,6 +62,7 @@ function Room(name){
 	this.name = name;
 	this.users = [];
 	this.buzzer = "";
+	this.stamp = 0;
 	this.buzz = function(name){
 		if (this.buzzer == "") {
 			this.buzzer = name;
@@ -71,13 +72,16 @@ function Room(name){
 				else
 					u.socket.emit('locked', name, (new Date(Date.now()) + "").substring(16, 24));
 			});
+			this.stamp = Date.now();
 		}
+		
 	}
 	this.clear = function(){
 		this.buzzer = "";
 		this.users.forEach(function(u){
 			u.socket.emit('clear', "")
 		});
+		this.stamp = 0;
 	}
 	this.addUser = function(user){
 		user.socket.emit("add names", JSON.stringify(this.users.map(function(u){
@@ -100,6 +104,13 @@ function Room(name){
 			u.socket.emit('remove name', user.name, (new Date(Date.now()) + "").substring(16, 24),user.socket.id);
 		})
 	}
+	
+}
+
+function autoclear(room){
+		if(rooms[room].stamp>0 && Date.now()-rooms[room].stamp > 5000){
+			rooms[room].clear();
+		}
 }
 
 function User(name, socketID, roomName){
@@ -123,8 +134,11 @@ io.on('connection', function(socket){
 
 	// sends a clear signal to all clients and allows anyone to buzz again
 	socket.on('clear', function(buzz){
-		if (typeof users[socket.id] != "undefined")
-			users[socket.id].room.clear();
+		if (typeof users[socket.id] != "undefined"){
+			if(users[socket.id].name == users[socket.id].room.buzzer){
+				users[socket.id].room.clear();
+			}
+		}
 	});
 
 	// checks if a name is useable. locks the buzzer if someone has already buzzed.
@@ -187,6 +201,12 @@ setInterval(function(){
 	console.log("");
 }, 120000);
 
+setInterval(function(){
+	Object.keys(rooms).forEach(function(e){
+		autoclear(e);
+	})
+
+},1000)
 
 http.listen(8080, function(){
 	console.log('listening on *:8080');
