@@ -8,6 +8,7 @@ var dispsettings = false;
 var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed = false;
+var lastbuzz = 0;
 var timeoutID;
 var clearTimer;
 
@@ -84,7 +85,7 @@ window.addEventListener("keydown", function(a){
 		a.preventDefault();
 		if (!buzzed)
 			buzz()
-		else
+		else if (Date.now()-lastbuzz>=500)
 			clearbuzzer();
 	}
 });
@@ -96,11 +97,13 @@ function buzz(){
 }
 
 function clearbuzzer(){
-	clearTimeout(timeoutID);
-	clearInterval(clearTimer)
-	socket.emit("clear", "");
-	buzzed = false;
-	return false;
+	if (Date.now()-lastbuzz>=500){
+		clearTimeout(timeoutID);
+		clearInterval(clearTimer)
+		socket.emit("clear", "");
+		buzzed = false;
+		return false;
+	}
 }
 
 
@@ -195,15 +198,19 @@ socket.on('locked', function(msg, time){
 
 socket.on('your buzz', function(msg, time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
-	$('.clear').css('visibility','visible');
-	timeoutID = setTimeout(clearbuzzer, 5000);
 	var t = 5;
-	$('.clear').text("Clear 5")
-	clearTimer = setInterval(function(){
-		$('.clear').text("Clear " + (--t))
-	}, 1000)
+	$('.clear').css('visibility','visible');
+	$('.clear').text("Locked")
 	playSound();
 	$("#history").prepend("<div class='history'><b>" + time + " - " + msg + " buzzed</b></div>")
+	lastbuzz = Date.now();
+	setTimeout(function(){
+		$('.clear').text("Clear 5");
+		clearTimer = setInterval(function(){
+			$('.clear').text("Clear " + (--t))
+		}, 1000);
+		timeoutID = setTimeout(clearbuzzer, 5000);
+	},490);
 });
 
 socket.on('clear', function(msg){

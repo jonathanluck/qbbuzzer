@@ -62,26 +62,35 @@ function Room(name){
 	this.name = name;
 	this.users = [];
 	this.buzzer = "";
+	this.lastbuzzer = "";
+	this.laststamp = "";
 	this.stamp = 0;
 	this.buzz = function(name){
 		if (this.buzzer == "") {
-			this.buzzer = name;
-			this.users.forEach(function(u){
-				if (u.name == name)
-					u.socket.emit('your buzz', name, (new Date(Date.now()) + "").substring(16, 24));
-				else
-					u.socket.emit('locked', name, (new Date(Date.now()) + "").substring(16, 24));
-			});
-			this.stamp = Date.now();
+			if (this.lastbuzzer != name || Date.now()-this.laststamp > 1000){
+				this.buzzer = name;
+				this.users.forEach(function(u){
+					if (u.name == name)
+						u.socket.emit('your buzz', name, (new Date(Date.now()) + "").substring(16, 24));
+					else
+						u.socket.emit('locked', name, (new Date(Date.now()) + "").substring(16, 24));
+				});
+				this.stamp = Date.now();
+				this.laststamp = Date.now();
+				this.lastbuzzer = name;
+			}
+
 		}
 		
 	}
 	this.clear = function(){
-		this.buzzer = "";
-		this.users.forEach(function(u){
-			u.socket.emit('clear', "")
-		});
-		this.stamp = 0;
+		if(Date.now()-this.laststamp > 250){
+			this.buzzer = "";
+			this.users.forEach(function(u){
+				u.socket.emit('clear', "")
+			});
+			this.stamp = 0;
+		}
 	}
 	this.addUser = function(user){
 		user.socket.emit("add names", JSON.stringify(this.users.map(function(u){
