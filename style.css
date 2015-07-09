@@ -5,7 +5,7 @@ body {
 button {
     border-radius: 5px;
     border-style: none;
-	font-size: 54px;
+    font-size: 54px;
     display: block;
     margin-right: auto;
     margin-left: auto;
@@ -22,21 +22,25 @@ button:active {
     font-size: 20px;
     background-color: #2275D4;
 }
+
 .submit:hover {
     background-color: #3e89e0;
 }
 
 .default {
-    background-color:#0fa31c ;
+    background-color: #0fa31c;
 }
-.default:hover{
-	background-color:#11bb1f;
+
+.default:hover {
+    background-color: #11bb1f;
 }
+
 .buzzed {
     background-color: #f2c32c;
 }
+
 .buzzed :active {
-    box-shadow:none;
+    box-shadow: none;
 }
 
 .locked {
@@ -47,7 +51,7 @@ button:active {
 
 .clear {
     background-color: #B8B8B8;
-    font-color: #000000;
+    color: #FFFFFF;
 }
 
 .settings {
@@ -55,8 +59,8 @@ button:active {
     background-color: #2275D4;
 }
 
-.settings:hover{
-	background-color: #3e89e0;
+.settings:hover {
+    background-color: #3e89e0;
 }
 
 .history {
@@ -88,7 +92,7 @@ button:active {
     right: 0;
     top: 30px;
     width: 500px;
-	max-width: 90%;
+    max-width: 90%;
     margin: auto;
     font-size: 20px;
 }
@@ -190,50 +194,50 @@ button:active {
     color: #FFFFFF;
 }
 
-#history div{
-text-align:left;
-padding-left: 2px;
+#history div {
+    text-align: left;
+    padding-left: 2px;
 }
 
 @media only screen and (max-width: 800px) {
-   button {
-		font-size: 48px;
-		width:95%;
-		border-radius: 3px;
-		padding-top: 14px;
-		padding-bottom: 14px;
-   }
-   
-   #buzzbutton{
-		height:130px;
-		max-height:20%;
-   }
-   
-   .settings {
-		width:80%;
-		font-size: 25px;
-		background-color: #2275D4;
-	}
-	
-	#infobox{
-		font-size:20px;
-		width:90%;
-	}
-	
-	#info{
-		width:90%;
-	}
-	
-	#historywrapper{
-		font-size:20px;
-		width:90%;
-	}
-	
-	#history{
-		width:90%;
-	}
-	
-	.submit{
-		width:80%;
-	}
+    button {
+        font-size: 48px;
+        width: 95%;
+        border-radius: 3px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+    }
+
+    #buzzbutton {
+        height: 130px;
+        max-height: 20%;
+    }
+
+    .settings {
+        width: 80%;
+        font-size: 25px;
+        background-color: #2275D4;
+    }
+
+    #infobox {
+        font-size: 20px;
+        width: 90%;
+    }
+
+    #info {
+        width: 90%;
+    }
+
+    #historywrapper {
+        font-size: 20px;
+        width: 90%;
+    }
+
+    #history {
+        width: 90%;
+    }
+
+    .submit {
+        width: 80%;
+    }
 }

@@ -13,16 +13,16 @@ var timeoutID;
 var clearTimer;
 
 function entername(){
-	if (document.getElementById("usernameinput").value.length > 0) {
+	if(document.getElementById("usernameinput").value.length > 0) {
 		name = document.getElementById("usernameinput").value;
 	}
-	else {
+	else{
 		name = ""
 	}
 	checkname();
 }
 function checkname(){
-	if (name == "null"){
+	if(name == "null") {
 		socket.emit("check name", "");
 	}
 	else{
@@ -31,44 +31,52 @@ function checkname(){
 	return false;
 }
 function enterroom(){
-	if (document.getElementById("roomnameinput").value.length > 0)
+	if(document.getElementById("roomnameinput").value.length > 0) {
 		room = document.getElementById("roomnameinput").value;
-	else
-		room = "default"
+	}
+	else{
+		room = "default";
+	}
 	$("#roomname").remove();
 	$("#username").show();
 	$("#usernameinput").focus();
 	getroom();
 }
 function getroom(){
-	if (room == null)
+	if(room == null) {
 		socket.emit("send room", "");
-	else
+	}
+	else{
 		socket.emit("send room", room);
+	}
 	return false;
 }
 
 $(document).ready(function(){
 	$('#roomnameinput').keypress(
 		function(e){
-			if (!e) e = window.event;
+			if(!e) {
+				e = window.event;
+			}
 			var keyCode = e.keyCode || e.which;
-			if (keyCode == '13') {
-				enterroom()
+			if(keyCode == '13') {
+				enterroom();
 				return false;
 			}
 		});
 	$('#usernameinput').keypress(
 		function(e){
-			if (!e) e = window.event;
+			if(!e) {
+				e = window.event;
+			}
 			var keyCode = e.keyCode || e.which;
-			if (keyCode == '13') {
+			if(keyCode == '13') {
 				entername();
 				return false;
 			}
 		}
 	);
-	$('.clear').css('visibility','hidden');
+	$('.clear').css('visibility', 'hidden');
 });
 
 function newEle(ele, text){
@@ -78,12 +86,13 @@ function newEle(ele, text){
 }
 
 window.addEventListener("keydown", function(a){
-	if (a.which == 32) {
+	if(a.which == 32) {
 		a.preventDefault();
-		if (!buzzed)
-			buzz()
-		else if (Date.now()-lastbuzz>=500)
+		if(!buzzed) {
+			buzz();
+		} else if(Date.now() - lastbuzz >= 500) {
 			clearbuzzer();
+		}
 	}
 });
 
@@ -94,9 +103,9 @@ function buzz(){
 }
 
 function clearbuzzer(){
-	if (Date.now()-lastbuzz>=500){
+	if(Date.now() - lastbuzz >= 500) {
 		clearTimeout(timeoutID);
-		clearInterval(clearTimer)
+		clearInterval(clearTimer);
 		socket.emit("clear", "");
 		buzzed = false;
 		return false;
@@ -105,28 +114,29 @@ function clearbuzzer(){
 
 function togglesound(){
 	playsound = !playsound;
-	if (playsound) {
-		$("#togglesound").text("Sound: On")
+	if(playsound) {
+		$("#togglesound").text("Sound: On");
 		$("#changesound").show();
 	}
-	else {
-		$("#togglesound").text("Sound: Off")
+	else{
+		$("#togglesound").text("Sound: Off");
 		$("#changesound").hide();
 	}
 }
 
 function playSound(){
-	if (playsound)
+	if(playsound) {
 		audio.play();
+	}
 }
 
 function changesound(){
-	if (sound == "pop") {
+	if(sound == "pop") {
 		sound = "buzz";
 		audio = document.getElementById("sound2");
 		$("#changesound").text("Sound: Buzz");
 	}
-	else if (sound == "buzz") {
+	else if(sound == "buzz") {
 		sound = "pop";
 		audio = document.getElementById("sound");
 		$("#changesound").text("Sound: Pop");
@@ -134,12 +144,12 @@ function changesound(){
 }
 
 function toggleinfo(){
-	if (dispinfo){
+	if(dispinfo) {
 		dispinfo = false;
 		$("#infobox").hide();
 		$("#infobutton").text("Show Info");
 	}
-	else {
+	else{
 		dispinfo = true;
 		$("#infobox").show();
 		$("#infobutton").text("Hide Info");
@@ -147,7 +157,7 @@ function toggleinfo(){
 }
 
 function togglesettings(){
-	if (dispsettings) {
+	if(dispsettings) {
 		dispsettings = false;
 		$("#togglesound").hide();
 		$("#changesound").hide();
@@ -155,7 +165,7 @@ function togglesettings(){
 		$("#togglehist").hide();
 		$("#togglesettings").text("Show Settings");
 	}
-	else {
+	else{
 		dispsettings = true;
 		$("#togglesound").show();
 		$("#changesound").show();
@@ -166,13 +176,13 @@ function togglesettings(){
 }
 
 function togglehistory(){
-	if (disphist) {
+	if(disphist) {
 		disphist = false;
 		$("#historywrapper").hide();
 		$("#clearhist").hide();
 		$("#togglehist").text("Show History");
 	}
-	else {
+	else{
 		disphist = true;
 		$("#historywrapper").show();
 		$("#clearhist").show();
@@ -183,20 +193,19 @@ function togglehistory(){
 socket.on('locked', function(msg, time){
 	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled", true);
 	$('#container').text(msg + " has buzzed").show(250);
-	$('.clear').css('visibility','hidden');
+	$('.clear').css('visibility', 'hidden');
 	playSound();
-	var ele = newEle("div", time + " - " + msg +" buzzed");
-	ele.class = "history"
+	var ele = newEle("div", time + " - " + msg + " buzzed");
+	ele.class = "history";
 	$("#history").prepend(ele);
 });
 
 socket.on('your buzz', function(msg, time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
 	var t = 5;
-	$('.clear').css('visibility','visible');
-	$('.clear').text("Locked")
+	$('.clear').css('visibility', 'visible').text("Locked");
 	playSound();
-	$("#history").prepend("<div class='history'><b>" + time + " - " + msg + " buzzed</b></div>")
+	$("#history").prepend("<div class='history'><b>" + time + " - " + msg + " buzzed</b></div>");
 	lastbuzz = Date.now();
 	setTimeout(function(){
 		$('.clear').text("Clear 5");
@@ -204,13 +213,13 @@ socket.on('your buzz', function(msg, time){
 			$('.clear').text("Clear " + (--t))
 		}, 1000);
 		timeoutID = setTimeout(clearbuzzer, 5000);
-	},490);
+	}, 490);
 });
 
-socket.on('clear', function(msg){
+socket.on('clear', function(){
 	$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled", false);
 	$('#container').text("").hide(350);
-	$('.clear').css('visibility','hidden');
+	$('.clear').css('visibility', 'hidden');
 });
 
 socket.on('good name', function(msg){
@@ -222,7 +231,7 @@ socket.on('good name', function(msg){
 	$("#popup").hide();
 });
 
-socket.on('bad name', function(msg){
+socket.on('bad name', function(){
 	$("#popup").show();
 	$("#username").show();
 	alert("Invalid name or username already taken");
@@ -238,8 +247,8 @@ socket.on('add names', function(msg, id, isNew, time){
 	JSON.parse(msg).forEach(function(name, index){
 		$("#users").append("<div id='" + id[index] + "'></div>");
 		$("#" + id[index]).text(name);
-	})
-	if (isNew) {
+	});
+	if(isNew) {
 		var ele = newEle("div", time + " - " + JSON.parse(msg)[0] + " has joined");
 		ele.class = 'history';
 		$("#history").prepend(ele);
