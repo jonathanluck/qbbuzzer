@@ -1,4 +1,5 @@
 var app = require('express')();
+var md5 = require(__dirname+'/md5.js');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
@@ -111,10 +112,10 @@ function Room(name){
 		user.socket.emit("add names", JSON.stringify(this.users.map(function(u){
 			return u.name;
 		})), JSON.stringify(this.users.map(function(u){
-			return u.socket.id;
+			return md5.CryptoJS.MD5(u.socket.id).toString();
 		})), false, (new Date(Date.now()) + "").substring(16, 24));
 		this.users.forEach(function(u){
-			u.socket.emit('add names', '["' + user.name + '"]', '["' + user.socket.id + '"]', true, (new Date(Date.now()) + "").substring(16, 24));
+			u.socket.emit('add names', '["' + user.name + '"]', '["' + md5.CryptoJS.MD5(user.socket.id).toString() + '"]', true, (new Date(Date.now()) + "").substring(16, 24));
 		});
 		this.users.push(user);
 	};
@@ -129,7 +130,7 @@ function Room(name){
 			}
 		}
 		this.users.forEach(function(u){
-			u.socket.emit('remove name', user.name, (new Date(Date.now()) + "").substring(16, 24), user.socket.id);
+			u.socket.emit('remove name', user.name, (new Date(Date.now()) + "").substring(16, 24), md5.CryptoJS.MD5(user.socket.id).toString());
 		})
 	}
 }
