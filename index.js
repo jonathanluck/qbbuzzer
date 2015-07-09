@@ -14,7 +14,16 @@ files.forEach(function(a){
 	app.get('/' + a, function(req, res){
 		res.sendFile(__dirname + '/' + a);
 	});
+	
 });
+app.use(function(req, res) {
+     res.status(404).send('<title>404</title><h1>404: Oh noes! Page not Found</h1><br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/200/300">');
+});
+
+app.use(function(req, res) {
+     res.status(404).send('<title>500</title><h1>500: Oh noes! Internal server error</h1><br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/200/300">');
+});
+
 
 // has the server start and listen on port 8080
 
@@ -55,7 +64,7 @@ function sanitize(string){
 
 function addRoom(room){
 	if (room.constructor == Room)
-		rooms[room.name] = room;
+		rooms[room.name.toLowerCase()] = room;
 }
 
 function Room(name){
@@ -133,7 +142,7 @@ function User(name, socketID, roomName){
 
 io.on('connection', function(socket){
 	ips[socket.id] = socket.request.connection.remoteAddress;
-	fs.appendFile('iplog.txt', socket.request.connection.remoteAddress + "\t" + new Date(Date.now()) + "\n");
+	fs.appendFile('qbbuzzer/iplog.txt', socket.request.connection.remoteAddress + "\t" + new Date(Date.now()) + "\n",function(e){});
 	// recieves a buzz
 	// sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz
 	socket.on('buzz', function(buzz){
@@ -174,15 +183,17 @@ io.on('connection', function(socket){
 
 	socket.on('send room', function(room){
 		room = sanitize(room);
-		if (room.length == 0) {
-			room = "default"
+		var cleanroom = room.toLowerCase();
+		if (cleanroom.length == 0) {
+			cleanroom = "default";
+			room = "default";
 		}
-		if (typeof rooms[room] == "undefined"){
+		if (typeof rooms[cleanroom] == "undefined"){
 			addRoom(new Room(room));
 		}
-		socket.room = room;
-		socket.join(room);
-		io.sockets.connected[socket.id].emit('get room', room);
+		socket.room = cleanroom;
+		socket.join(cleanroom);
+		io.sockets.connected[socket.id].emit('get room', rooms[cleanroom].name);
 	});
 
 	// clears the buzzer when a user that has buzzed disconnects
@@ -191,17 +202,22 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		var user = users[socket.id];
 		if (typeof user !== 'undefined') {
-			var room = users[socket.id].room;
-			if (typeof room !== 'undefined')
+			var room = users[socket.id].room;		
+			if (typeof room !== 'undefined'){
 				room.removeUser(users[socket.id]);
+				if(rooms[room.name.toLowerCase()].users.length == 0){
+					delete rooms[room.name.toLowerCase()];
+				}
+			}
 		}
 		delete users[socket.id];
+		
 	});
 });
 
 setInterval(function(){
 	console.log(new Date(Date.now()));
-	console.log("Active users: " + users.length);
+	console.log("Active users: " + Object.keys(users).length);
 	for (var i = 0; i < Object.keys(ips).length; i++) {
 		if (Object.keys(ips)[i].length > 0) {
 			console.log(Object.keys(ips)[i] + "\t" + ips[Object.keys(ips)[i]]);
@@ -214,7 +230,6 @@ setInterval(function(){
 	Object.keys(rooms).forEach(function(e){
 		autoclear(e);
 	})
-
 },1000)
 
 http.listen(8080, function(){
