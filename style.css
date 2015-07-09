@@ -14,8 +14,6 @@ button {
     color: #FFFFFF;
 }
 
-
-
 button:active {
     box-shadow: 1px 1px 2px #505050;
 }
@@ -23,7 +21,6 @@ button:active {
 .submit {
     font-size: 20px;
     background-color: #2275D4;
-
 }
 .submit:hover {
     background-color: #3e89e0;
@@ -57,6 +54,7 @@ button:active {
     font-size: 17px;
     background-color: #2275D4;
 }
+
 .settings:hover{
 	background-color: #3e89e0;
 }
@@ -198,7 +196,6 @@ padding-left: 2px;
 }
 
 @media only screen and (max-width: 800px) {
-
    button {
 		font-size: 48px;
 		width:95%;
@@ -206,31 +203,37 @@ padding-left: 2px;
 		padding-top: 14px;
 		padding-bottom: 14px;
    }
+   
    #buzzbutton{
 		height:130px;
 		max-height:20%;
    }
+   
    .settings {
 		width:80%;
 		font-size: 25px;
 		background-color: #2275D4;
 	}
+	
 	#infobox{
 		font-size:20px;
 		width:90%;
 	}
+	
 	#info{
 		width:90%;
 	}
+	
 	#historywrapper{
 		font-size:20px;
 		width:90%;
 	}
+	
 	#history{
 		width:90%;
 	}
+	
 	.submit{
 		width:80%;
 	}
-
 }

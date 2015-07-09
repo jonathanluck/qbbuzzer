@@ -19,7 +19,6 @@ function entername(){
 	else {
 		name = ""
 	}
-
 	checkname();
 }
 function checkname(){
@@ -59,7 +58,6 @@ $(document).ready(function(){
 				return false;
 			}
 		});
-
 	$('#usernameinput').keypress(
 		function(e){
 			if (!e) e = window.event;
@@ -71,7 +69,6 @@ $(document).ready(function(){
 		}
 	);
 	$('.clear').css('visibility','hidden');
-
 });
 
 function newEle(ele, text){
@@ -106,7 +103,6 @@ function clearbuzzer(){
 	}
 }
 
-
 function togglesound(){
 	playsound = !playsound;
 	if (playsound) {
@@ -138,7 +134,7 @@ function changesound(){
 }
 
 function toggleinfo(){
-	if (dispinfo) {
+	if (dispinfo){
 		dispinfo = false;
 		$("#infobox").hide();
 		$("#infobutton").text("Show Info");
@@ -157,8 +153,6 @@ function togglesettings(){
 		$("#changesound").hide();
 		$("#infobutton").hide();
 		$("#togglehist").hide();
-		
-		
 		$("#togglesettings").text("Show Settings");
 	}
 	else {
@@ -222,7 +216,7 @@ socket.on('clear', function(msg){
 socket.on('good name', function(msg){
 	name = msg;
 	$("#info").append(newEle("p", "Your username is: " + msg));
-	$(document).attr("title", "QBBuzzer - " + msg + " - " + room)
+	$(document).attr("title", "QBBuzzer - " + msg + " - " + room);
 	$("#users").prepend(newEle("div", msg));
 	$("#username").hide();
 	$("#popup").hide();
@@ -259,5 +253,5 @@ socket.on('remove name', function(msg, time, id){
 	$("#" + id).remove();
 });
 $("#container").hide();
-$("#usernameinput").hide()
+$("#usernameinput").hide();
 
