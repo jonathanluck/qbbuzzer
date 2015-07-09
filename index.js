@@ -157,7 +157,7 @@ function User(name, socketID, roomName){
 io.on('connection', function(socket){
 	//ip logging
 	ips[socket.id] = socket.request.connection.remoteAddress;
-	fs.appendFile('qbbuzzer/iplog.txt', socket.request.connection.remoteAddress + "\t" + new Date(Date.now()) + "\n", function(e){
+	fs.appendFile('iplog.log',  new Date(Date.now()) + "\t" + socket.request.connection.remoteAddress  + "\r\n", function(e){
 	});
 
 	//recieves a buzz
