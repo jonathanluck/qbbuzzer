@@ -226,6 +226,7 @@ io.on('connection', function(socket){
 			}
 		}
 		delete users[socket.id];
+		delete ips[socket.id];
 	});
 });
 
@@ -239,7 +240,7 @@ setInterval(function(){
 		}
 	}
 	console.log("");
-}, 120000);
+}, 300000);
 
 //loops through the map of rooms to perform autoclearing functions every second
 setInterval(function(){
