@@ -85,10 +85,10 @@ function Room(name){
 				this.buzzer = name;
 				this.users.forEach(function(u){
 					if(u.name == name) {
-						u.socket.emit('your buzz', name, (new Date(Date.now()) + "").substring(16, 24));
+						u.socket.emit('your buzz', name, Date.now());
 					}
 					else{
-						u.socket.emit('locked', name, (new Date(Date.now()) + "").substring(16, 24));
+						u.socket.emit('locked', name, Date.now());
 					}
 				});
 				this.stamp = Date.now();
@@ -113,9 +113,9 @@ function Room(name){
 			return u.name;
 		})), JSON.stringify(this.users.map(function(u){
 			return md5.CryptoJS.MD5(u.socket.id).toString();
-		})), false, (new Date(Date.now()) + "").substring(16, 24));
+		})), false, Date.now());
 		this.users.forEach(function(u){
-			u.socket.emit('add names', '["' + user.name + '"]', '["' + md5.CryptoJS.MD5(user.socket.id).toString() + '"]', true, (new Date(Date.now()) + "").substring(16, 24));
+			u.socket.emit('add names', '["' + user.name + '"]', '["' + md5.CryptoJS.MD5(user.socket.id).toString() + '"]', true, Date.now());
 		});
 		this.users.push(user);
 	};
@@ -130,7 +130,7 @@ function Room(name){
 			}
 		}
 		this.users.forEach(function(u){
-			u.socket.emit('remove name', user.name, (new Date(Date.now()) + "").substring(16, 24), md5.CryptoJS.MD5(user.socket.id).toString());
+			u.socket.emit('remove name', user.name, Date.now(), md5.CryptoJS.MD5(user.socket.id).toString());
 		})
 	}
 }

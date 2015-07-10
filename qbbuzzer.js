@@ -8,6 +8,7 @@ var dispsettings = false;
 var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed = false;
+var emptyname = false;
 var lastbuzz = 0;
 var timeoutID;
 var clearTimer;
@@ -17,7 +18,8 @@ function entername(){
 		name = document.getElementById("usernameinput").value;
 	}
 	else{
-		name = ""
+		emptyname = true;
+		name = genRandomName()
 	}
 	checkname();
 }
@@ -190,12 +192,22 @@ function togglehistory(){
 	}
 }
 
+function decodeDate(d){
+	return (new Date(d) + "").substring(16, 24);
+}
+
+function genRandomName(){
+	animals  = ['Aardvark','Alligator','Ant','Antelope','Armadillo','Baboon','Barracuda','Bear','Bee','Boar','Butterfly','Caribou','Caterpillar','Cheetah','Chimpanzee','Cobra','Cormorant','Crab','Crocodile','Deer','Dog','Donkey','Dragonfly','Eagle','Eel','Elephant','Emu','Ferret','Fish','Fly','Frog','Gerbil','Giraffe','Goose','Gorilla','Guinea pig','Hare','Hedgehog','Hornet','Hummingbird','Jackal','Jay','Kangaroo','Komodo dragon','Lemur','Lion','Lobster','Meerkat','Mole','Moose','Mosquito','Narwhal','Octopus','Opossum','Otter','Ox','Panther','Pelican','Pig','Pony','Quail','Raccoon','Rat','Deer','Rhinoceros','Salmon','Sea lion','Seal','Sheep','Skunk','Snake','Squid','Starling','Stork','Swan','Toad','Turkey','Viper','Wallaby','Weasel','Wolf','Wombat','Worm','Yak'];
+	colors = ['Aqua','Azure','Beige','Bisque','Black','Blue','Brown','Coral','Cornsilk','Crimson','Cyan','Dark Blue','Dark Cyan','Dark Gray','Dark Red','Deep Pink','Dim Gray','Fuchsia','Gold','Gray','Green','Honey Dew','Hot Pink','Indigo','Ivory','Khaki','Lavender','Lime','Linen','Magenta','Maroon','Moccasin','Navy','Old Lace','Olive','Orange','Orchid','Peru','Pink','Plum','Purple','Red','Salmon','SeaGreen','SeaShell','Sienna','Silver','Sky Blue','Snow','Tan','Teal','Thistle','Tomato','Violet','Wheat','White','Yellow'];
+	return colors[Math.floor(Math.random() * colors.length)]+ " " + animals[Math.floor(Math.random() * animals.length)]
+	
+}
 socket.on('locked', function(msg, time){
 	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled", true);
 	$('#container').text(msg + " has buzzed").show(250);
 	$('.clear').css('visibility', 'hidden');
 	playSound();
-	var ele = newEle("div", time + " - " + msg + " buzzed");
+	var ele = newEle("div", decodeDate(time) + " - " + msg + " buzzed");
 	ele.class = "history";
 	$("#history").prepend(ele);
 });
@@ -203,12 +215,12 @@ socket.on('locked', function(msg, time){
 socket.on('your buzz', function(msg, time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
 	var t = 5;
-	$('.clear').css('visibility', 'visible').text("Locked");
+	$('.clear').css('visibility', 'visible').text("Locked").css('background-color','#C7C7C7');
 	playSound();
-	$("#history").prepend("<div class='history'><b>" + time + " - " + msg + " buzzed</b></div>");
+	$("#history").prepend("<div class='history'><b>" + decodeDate(time) + " - " + msg + " buzzed</b></div>");
 	lastbuzz = Date.now();
 	setTimeout(function(){
-		$('.clear').text("Clear 5");
+		$('.clear').text("Clear 5").css('background-color','#9E9E9E');
 		clearTimer = setInterval(function(){
 			$('.clear').text("Clear " + (--t))
 		}, 1000);
@@ -232,6 +244,10 @@ socket.on('good name', function(msg){
 });
 
 socket.on('bad name', function(){
+	if(emptyname){
+		name = genRandomName();
+		checkname();
+	}
 	$("#popup").show();
 	$("#username").show();
 	alert("Invalid name or username already taken");
@@ -249,14 +265,14 @@ socket.on('add names', function(msg, id, isNew, time){
 		$("#" + id[index]).text(name);
 	});
 	if(isNew) {
-		var ele = newEle("div", time + " - " + JSON.parse(msg)[0] + " has joined");
+		var ele = newEle("div", decodeDate(time) + " - " + JSON.parse(msg)[0] + " has joined");
 		ele.class = 'history';
 		$("#history").prepend(ele);
 	}
 });
 
 socket.on('remove name', function(msg, time, id){
-	var ele = newEle("div", time + " - " + msg + " has left");
+	var ele = newEle("div", decodeDate(time) + " - " + msg + " has left");
 	ele.class = 'history';
 	$("#history").prepend(ele);
 	$("#" + id).remove();
