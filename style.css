@@ -97,6 +97,7 @@ button:active {
     max-width: 90%;
     margin: auto;
     font-size: 20px;
+	text-align: center;
 }
 
 .inputforms input {

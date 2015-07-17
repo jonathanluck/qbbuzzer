@@ -9,6 +9,8 @@ var sound = "pop";
 var audio = document.getElementById("sound");
 var buzzed = false;
 var emptyname = false;
+var finished = false;
+var canSpace = true;
 var lastbuzz = 0;
 var timeoutID;
 var clearTimer;
@@ -88,19 +90,32 @@ function newEle(ele, text){
 }
 
 window.addEventListener("keydown", function(a){
-	if(a.which == 32) {
-		a.preventDefault();
-		if(!buzzed) {
-			buzz();
-		} else if(Date.now() - lastbuzz >= 500) {
-			clearbuzzer();
-		}
+	console.log("canSpace:" + canSpace);
+	if(a.which == 32 && finished && canSpace) {
+			a.preventDefault();
+
+			if(!buzzed) {
+				buzz();
+			} 
+			else if(Date.now() - lastbuzz >= 500) {
+				clearbuzzer();
+			}
+			canSpace = false;
+	}
+});
+
+
+window.addEventListener("keyup", function(a){
+	if(a.which == 32 && finished && !canSpace) {
+		canSpace = true;
+		
 	}
 });
 
 function buzz(){
-	socket.emit("buzz", name);
-	buzzed = true;
+	if(!buzzed){
+		socket.emit("buzz", name);
+	}
 	return false;
 }
 
@@ -213,6 +228,7 @@ socket.on('locked', function(msg, time){
 });
 
 socket.on('your buzz', function(msg, time){
+	buzzed = true;
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
 	var t = 5;
 	$('.clear').css('visibility', 'visible').text("Locked").css('background-color','#C7C7C7');
@@ -226,6 +242,8 @@ socket.on('your buzz', function(msg, time){
 		}, 1000);
 		timeoutID = setTimeout(clearbuzzer, 5000);
 	}, 490);
+	
+
 });
 
 socket.on('clear', function(){
@@ -241,6 +259,7 @@ socket.on('good name', function(msg){
 	$("#users").prepend(newEle("div", msg));
 	$("#username").hide();
 	$("#popup").hide();
+	finished = true;
 });
 
 socket.on('bad name', function(){

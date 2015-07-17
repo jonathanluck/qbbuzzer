@@ -81,7 +81,7 @@ function Room(name){
 	//sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz
 	this.buzz = function(name){
 		if(this.buzzer == "") {
-			if(this.lastbuzzer != name || Date.now() - this.laststamp > 1000) {
+			if(this.lastbuzzer != name || Date.now() - this.laststamp > 500) {
 				this.buzzer = name;
 				this.users.forEach(function(u){
 					if(u.name == name) {
@@ -99,7 +99,7 @@ function Room(name){
 	};
 	//clears the buzzer for the room
 	this.clear = function(){
-		if(Date.now() - this.laststamp > 250) {
+		if(Date.now() - this.laststamp > 100) {
 			this.buzzer = "";
 			this.users.forEach(function(u){
 				u.socket.emit('clear', "")
@@ -230,7 +230,7 @@ io.on('connection', function(socket){
 	});
 });
 
-//prints out the number of connected clients and their ips every 2 minutes
+//prints out the number of connected clients and their ips every 5 minutes
 setInterval(function(){
 	console.log(new Date(Date.now()));
 	console.log("Active users: " + Object.keys(users).length);
