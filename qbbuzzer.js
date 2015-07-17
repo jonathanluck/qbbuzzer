@@ -299,12 +299,13 @@ socket.on('send roomlist', function(msg){
 		var keys = Object.keys(roomlist);
 		keys.forEach(function(e){
 			var num = roomlist[e]
+			var roomname = e;
 			if(e.length>23){
 				e = e.substring(0,23)+"...";
 			}
 			var ele = newEle("div",e+": "+num+" users");
 			ele.addEventListener("click", function(){
-				getroom(e);
+				getroom(roomname);
 			});
 			$("#roomlist").append(ele);
 		});
