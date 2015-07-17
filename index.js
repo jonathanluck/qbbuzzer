@@ -6,12 +6,13 @@ var fs = require('fs');
 var users = {};
 var rooms = {};
 var ips = {"": ""};
+var roomreq = {};
 if(typeof __dirname == "undefined") {
 	__dirname = "C:\\Program Files\\nodejs\\qbbuzzer";
 }
 
 //allows server to send all files needed for the website
-files = ['', 'index.html', 'style.css', 'pop.mp3', 'socketio.js', 'qbbuzzer.js', 'buzzsound.mp3'];
+files = ['', 'index.html', 'style.css', 'pop.mp3', 'socketio.js', 'qbbuzzer.js', 'buzzsound.mp3', 'favicon.png', 'faviconred.png'];
 files.forEach(function(a){
 	app.get('/' + a, function(req, res){
 		res.sendFile(__dirname + '/' + a);
@@ -175,6 +176,28 @@ io.on('connection', function(socket){
 			}
 		}
 	});
+	
+	socket.on('get roomlist', function(){
+		if(typeof roomreq[socket.id] == "undefined") {
+			roomreq[socket.id] = Date.now();
+			var names = Object.keys(rooms);
+			var sendMap = {}
+			names.forEach(function(i){
+				sendMap[rooms[i].name] = rooms[i].users.length;
+			});
+			io.sockets.connected[socket.id].emit('send roomlist', JSON.stringify(sendMap));
+		}
+		else if(Date.now()-roomreq[socket.id]>5000){
+			roomreq[socket.id] = Date.now();
+			var names = Object.keys(rooms);
+			var sendMap = {}
+			names.forEach(function(i){
+				sendMap[rooms[i].name] = rooms[i].users.length;
+			});
+			io.sockets.connected[socket.id].emit('send roomlist', JSON.stringify(sendMap));
+			console.log("data sent");
+		}
+	});
 
 	//checks if a name is useable. locks the buzzer if someone has already buzzed.
 	//broadcasts to all clients to add the new name
@@ -205,10 +228,20 @@ io.on('connection', function(socket){
 		}
 		if(typeof rooms[cleanroom] == "undefined") {
 			addRoom(new Room(room));
+			socket.room = cleanroom;
+			socket.join(cleanroom);
+			io.sockets.connected[socket.id].emit('get room', rooms[cleanroom].name);
+			delete roomreq[socket.id];
 		}
-		socket.room = cleanroom;
-		socket.join(cleanroom);
-		io.sockets.connected[socket.id].emit('get room', rooms[cleanroom].name);
+		else if(rooms[cleanroom].users.length>=25){
+			io.sockets.connected[socket.id].emit('room full',room)
+		}
+		else{
+			socket.room = cleanroom;
+			socket.join(cleanroom);
+			io.sockets.connected[socket.id].emit('get room', rooms[cleanroom].name);
+			delete roomreq[socket.id];
+		}
 	});
 
 	//clears the buzzer when a user that has buzzed disconnects
@@ -227,6 +260,7 @@ io.on('connection', function(socket){
 		}
 		delete users[socket.id];
 		delete ips[socket.id];
+		delete roomreq[socket.id];
 	});
 });
 

@@ -7,6 +7,7 @@
         <meta charset="UTF-8">
         <meta name="description" content="Free online quizbowl buzzer system">
         <link rel="stylesheet" type="text/css" href="style.css">
+		<link id="icon" rel="shortcut icon"/>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="http://cdn.socket.io/socket.io-1.2.0.js"></script>
@@ -40,6 +41,10 @@
                 <br>
                 <input id="roomnameinput" placeholder="room name" autofocus/>
                 <button class="submit" onclick="enterroom()">Submit</button>
+				<button class="submit" id="roomlistbutton" onclick="getroomlist()">Get List of Rooms</button>
+				<br>
+				<p style="display:none">Active Rooms:</p>
+				<div id="roomlist" style="display:none"></div>
             </div>
             <div class="inputforms" id="username" style="display:none">
                 Enter your username. Leaving this blank will assign you a random username
@@ -47,6 +52,7 @@
                 <br>
                 <input id="usernameinput" placeholder="username"/>
                 <button class="submit" onclick="entername()">Submit</button>
+				
             </div>
             <div id="container" style="display:none"></div>
             <br>
