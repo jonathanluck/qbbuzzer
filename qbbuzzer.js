@@ -16,7 +16,7 @@ var timeoutID;
 var clearTimer;
 
 function entername(){
-	if(document.getElementById("usernameinput").value.length > 0) {
+	if(document.getElementById("usernameinput").value.trim().length > 0) {
 		name = document.getElementById("usernameinput").value;
 	}
 	else{
@@ -90,17 +90,19 @@ function newEle(ele, text){
 }
 
 window.addEventListener("keydown", function(a){
-	console.log("canSpace:" + canSpace);
-	if(a.which == 32 && finished && canSpace) {
+	if(a.which == 32){
+		if (finished){
 			a.preventDefault();
-
-			if(!buzzed) {
-				buzz();
-			} 
-			else if(Date.now() - lastbuzz >= 500) {
-				clearbuzzer();
+			if(canSpace) {
+				if(!buzzed) {
+					buzz();
+				} 
+				else if(Date.now() - lastbuzz >= 500) {
+					clearbuzzer();
+				}
+				canSpace = false;
 			}
-			canSpace = false;
+		}
 	}
 });
 
@@ -215,7 +217,6 @@ function genRandomName(){
 	animals  = ['Aardvark','Alligator','Ant','Antelope','Armadillo','Baboon','Barracuda','Bear','Bee','Boar','Butterfly','Caribou','Caterpillar','Cheetah','Chimpanzee','Cobra','Cormorant','Crab','Crocodile','Deer','Dog','Donkey','Dragonfly','Eagle','Eel','Elephant','Emu','Ferret','Fish','Fly','Frog','Gerbil','Giraffe','Goose','Gorilla','Guinea pig','Hare','Hedgehog','Hornet','Hummingbird','Jackal','Jay','Kangaroo','Komodo dragon','Lemur','Lion','Lobster','Meerkat','Mole','Moose','Mosquito','Narwhal','Octopus','Opossum','Otter','Ox','Panther','Pelican','Pig','Pony','Quail','Raccoon','Rat','Deer','Rhinoceros','Salmon','Sea lion','Seal','Sheep','Skunk','Snake','Squid','Starling','Stork','Swan','Toad','Turkey','Viper','Wallaby','Weasel','Wolf','Wombat','Worm','Yak'];
 	colors = ['Aqua','Azure','Beige','Bisque','Black','Blue','Brown','Coral','Cornsilk','Crimson','Cyan','Dark Blue','Dark Cyan','Dark Gray','Dark Red','Deep Pink','Dim Gray','Fuchsia','Gold','Gray','Green','Honey Dew','Hot Pink','Indigo','Ivory','Khaki','Lavender','Lime','Linen','Magenta','Maroon','Moccasin','Navy','Old Lace','Olive','Orange','Orchid','Peru','Pink','Plum','Purple','Red','Salmon','SeaGreen','SeaShell','Sienna','Silver','Sky Blue','Snow','Tan','Teal','Thistle','Tomato','Violet','Wheat','White','Yellow'];
 	return colors[Math.floor(Math.random() * colors.length)]+ " " + animals[Math.floor(Math.random() * animals.length)]
-	
 }
 socket.on('locked', function(msg, time){
 	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled", true);
@@ -231,19 +232,14 @@ socket.on('your buzz', function(msg, time){
 	buzzed = true;
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
 	var t = 5;
-	$('.clear').css('visibility', 'visible').text("Locked").css('background-color','#C7C7C7');
 	playSound();
 	$("#history").prepend("<div class='history'><b>" + decodeDate(time) + " - " + msg + " buzzed</b></div>");
 	lastbuzz = Date.now();
-	setTimeout(function(){
-		$('.clear').text("Clear 5").css('background-color','#9E9E9E');
-		clearTimer = setInterval(function(){
-			$('.clear').text("Clear " + (--t))
-		}, 1000);
-		timeoutID = setTimeout(clearbuzzer, 5000);
-	}, 490);
-	
-
+	$('.clear').css('visibility', 'visible').text("Clear 5").css('background-color','#9E9E9E');
+	clearTimer = setInterval(function(){
+		$('.clear').text("Clear " + (--t))
+	}, 1000);
+	timeoutID = setTimeout(clearbuzzer, 5000);
 });
 
 socket.on('clear', function(){
