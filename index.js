@@ -195,7 +195,6 @@ io.on('connection', function(socket){
 				sendMap[rooms[i].name] = rooms[i].users.length;
 			});
 			io.sockets.connected[socket.id].emit('send roomlist', JSON.stringify(sendMap));
-			console.log("data sent");
 		}
 	});
 

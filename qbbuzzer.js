@@ -217,12 +217,13 @@ function decodeDate(d){
 
 function genRandomName(){
 	animals  = ['Aardvark','Alligator','Ant','Antelope','Armadillo','Baboon','Barracuda','Bear','Bee','Boar','Butterfly','Caribou','Caterpillar','Cheetah','Chimpanzee','Cobra','Cormorant','Crab','Crocodile','Deer','Dog','Donkey','Dragonfly','Eagle','Eel','Elephant','Emu','Ferret','Fish','Fly','Frog','Gerbil','Giraffe','Goose','Gorilla','Guinea pig','Hare','Hedgehog','Hornet','Hummingbird','Jackal','Jay','Kangaroo','Komodo dragon','Lemur','Lion','Lobster','Meerkat','Mole','Moose','Mosquito','Narwhal','Octopus','Opossum','Otter','Ox','Panther','Pelican','Pig','Pony','Quail','Raccoon','Rat','Deer','Rhinoceros','Salmon','Sea lion','Seal','Sheep','Skunk','Snake','Squid','Starling','Stork','Swan','Toad','Turkey','Viper','Wallaby','Weasel','Wolf','Wombat','Worm','Yak'];
-	colors = ['Aqua','Azure','Beige','Bisque','Black','Blue','Brown','Coral','Cornsilk','Crimson','Cyan','Dark Blue','Dark Cyan','Dark Gray','Dark Red','Deep Pink','Dim Gray','Fuchsia','Gold','Gray','Green','Honey Dew','Hot Pink','Indigo','Ivory','Khaki','Lavender','Lime','Linen','Magenta','Maroon','Moccasin','Navy','Old Lace','Olive','Orange','Orchid','Peru','Pink','Plum','Purple','Red','Salmon','SeaGreen','SeaShell','Sienna','Silver','Sky Blue','Snow','Tan','Teal','Thistle','Tomato','Violet','Wheat','White','Yellow'];
+	colors = ['Aqua','Azure','Beige','Bisque','Black','Blue','Brown','Coral','Cornsilk','Crimson','Cyan','Dark Blue','Dark Cyan','Dark Gray','Dark Red','Deep Pink','Dim Gray','Fuchsia','Gold','Gray','Green','Honey Dew','Hot Pink','Indigo','Ivory','Khaki','Lavender','Lime','Linen','Magenta','Maroon','Moccasin','Navy','Old Lace','Olive','Orange','Orchid','Peru','Pink','Plum','Purple','Red','Salmon','Sea Green','Sea Shell','Sienna','Silver','Sky Blue','Snow','Tan','Teal','Thistle','Tomato','Violet','Wheat','White','Yellow'];
 	return colors[Math.floor(Math.random() * colors.length)]+ " " + animals[Math.floor(Math.random() * animals.length)]
 }
 socket.on('locked', function(msg, time){
 	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled", true);
-	$('#container').text(msg + " has buzzed").show(250);
+	$('#container').text(msg + " has buzzed");
+	$('#container').show(250);
 	$('.clear').css('visibility', 'hidden');
 	playSound();
 	var ele = newEle("div", decodeDate(time) + " - " + msg + " buzzed");
@@ -257,8 +258,8 @@ socket.on('good name', function(msg){
 	$("#info").append(newEle("p", "Your username is: " + msg));
 	$(document).attr("title", "QBBuzzer - " + msg + " - " + room);
 	$("#users").prepend(newEle("div", msg));
-	$("#username").hide();
-	$("#popup").hide();
+	$("#username").remove();
+	$("#popup").remove();
 	finished = true;
 	$("link[rel*='shortcut icon'").attr("href","favicon.png");
 });
@@ -334,4 +335,3 @@ socket.on('remove name', function(msg, time, id){
 });
 $("#container").hide();
 $("#usernameinput").hide();
-
