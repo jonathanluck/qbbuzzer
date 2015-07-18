@@ -83,6 +83,7 @@ $(document).ready(function(){
 		}
 	);
 	$('.clear').css('visibility', 'hidden');
+	circle();
 });
 
 function newEle(ele, text){
@@ -116,6 +117,21 @@ window.addEventListener("keyup", function(a){
 	}
 });
 
+window.addEventListener("resize", circle);
+
+
+function circle(){
+	if(window.matchMedia("(max-width: 600px)").matches){
+		width = $("#buzzbutton").width();
+		$("#buzzbutton").css("height", width);
+		$("#buzzbutton").css("border-radius",width/2);
+	}
+	else{
+		$("#buzzbutton").css("border-radius", "5px");
+		$("#buzzbutton").css("height", "");
+
+	}
+}
 function buzz(){
 	if(!buzzed){
 		socket.emit("buzz", name);
@@ -221,13 +237,13 @@ function genRandomName(){
 	return colors[Math.floor(Math.random() * colors.length)]+ " " + animals[Math.floor(Math.random() * animals.length)]
 }
 socket.on('locked', function(msg, time){
-	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked').prop("disabled", true);
+	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked');
 	$('#container').text(msg + " has buzzed");
 	$('#container').show(250);
 	$('.clear').css('visibility', 'hidden');
 	playSound();
 	var ele = newEle("div", decodeDate(time) + " - " + msg + " buzzed");
-	ele.class = "history";
+	$(ele).addClass("history");
 	$("#history").prepend(ele);
 	$("link[rel*='shortcut icon'").attr("href","faviconred.png");
 });
@@ -237,7 +253,12 @@ socket.on('your buzz', function(msg, time){
 	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
 	var t = 5;
 	playSound();
-	$("#history").prepend("<div class='history'><b>" + decodeDate(time) + " - " + msg + " buzzed</b></div>");
+	var div = document.createElement("div");
+	$(div).text(decodeDate(time)+" - ");
+	var span = document.createElement("span");
+	$(span).text(msg+ " buzzed");
+	$(div).addClass('history').append(span);
+	$("#history").prepend(div);
 	lastbuzz = Date.now();
 	$('.clear').css('visibility', 'visible').text("Clear 5");
 	clearTimer = setInterval(function(){
@@ -255,9 +276,16 @@ socket.on('clear', function(){
 
 socket.on('good name', function(msg){
 	name = msg;
-	$("#info").append(newEle("p", "Your username is: " + msg));
+	var p = document.createElement("p");
+	$(p).text("Username: ");
+	var span = document.createElement("span");
+	$(span).text(msg);
+	$(p).append(document.createElement("br")).append(span);
+	$("#info").append(p);
 	$(document).attr("title", "QBBuzzer - " + msg + " - " + room);
-	$("#users").prepend(newEle("div", msg));
+	var div = document.createElement("div");
+	$(div).append(newEle("span",msg));
+	$("#users").prepend(div);
 	$("#username").remove();
 	$("#popup").remove();
 	finished = true;
@@ -279,7 +307,7 @@ socket.on('get room', function(msg){
 	$("#username").show();
 	$("#usernameinput").focus();
 	room = msg;
-	$("#info").append(newEle("p", "Your room is: " + msg));
+	$("#info").text("Room: ").append(document.createElement("br")).append(newEle("span",msg));
 });
 
 socket.on('room full', function(msg){
@@ -323,14 +351,14 @@ socket.on('add names', function(msg, id, isNew, time){
 	});
 	if(isNew) {
 		var ele = newEle("div", decodeDate(time) + " - " + JSON.parse(msg)[0] + " has joined");
-		ele.class = 'history';
+		$(ele).addClass('history');
 		$("#history").prepend(ele);
 	}
 });
 
 socket.on('remove name', function(msg, time, id){
 	var ele = newEle("div", decodeDate(time) + " - " + msg + " has left");
-	ele.class = 'history';
+	$(ele).addClass('history');
 	$("#history").prepend(ele);
 	$("#" + id).remove();
 });

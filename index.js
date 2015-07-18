@@ -57,8 +57,8 @@ function genrandomname(){
 //sanitization of user input to remove whitespace and clip length
 function sanitize(string){
 	string = (string + "").trim();
-	if(string.length > 60) {
-		return string.substring(0, 60);
+	if(string.length > 50) {
+		return string.substring(0, 50);
 	}
 	return string;
 }
@@ -110,6 +110,7 @@ function Room(name){
 	};
 	//adds a new user to the room
 	this.addUser = function(user){
+		
 		user.socket.emit("add names", JSON.stringify(this.users.map(function(u){
 			return u.name;
 		})), JSON.stringify(this.users.map(function(u){
@@ -118,6 +119,9 @@ function Room(name){
 		this.users.forEach(function(u){
 			u.socket.emit('add names', '["' + user.name + '"]', '["' + md5.CryptoJS.MD5(user.socket.id).toString() + '"]', true, Date.now());
 		});
+		if(this.buzzer.length>0){
+			user.socket.emit("locked",this.buzzer,Date.now())
+		}
 		this.users.push(user);
 	};
 	//removes a user from the room
