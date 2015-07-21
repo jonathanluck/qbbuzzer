@@ -254,7 +254,7 @@ io.on('connection', function(socket){
 		var user = users[socket.id];
 		if(typeof user !== 'undefined') {
 			var room = users[socket.id].room;
-			if(typeof room !== 'undefined') {
+			if(typeof room[room] !== 'undefined') {
 				room.removeUser(users[socket.id]);
 				if(rooms[room.name.toLowerCase()].users.length == 0) {
 					delete rooms[room.name.toLowerCase()];
