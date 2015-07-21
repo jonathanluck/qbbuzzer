@@ -121,7 +121,7 @@ window.addEventListener("resize", circle);
 
 
 function circle(){
-	if(window.matchMedia("(max-width: 600px)").matches){
+	if(window.matchMedia("(max-width: 525px)").matches){
 		width = $("#buzzbutton").width();
 		$("#buzzbutton").css("height", width);
 		$("#buzzbutton").css("border-radius",width/2);
@@ -140,7 +140,7 @@ function buzz(){
 }
 
 function clearbuzzer(){
-	if(Date.now() - lastbuzz >= 500) {
+	if(Date.now() - lastbuzz >= 250) {
 		clearTimeout(timeoutID);
 		clearInterval(clearTimer);
 		socket.emit("clear", "");
@@ -245,7 +245,7 @@ socket.on('locked', function(msg, time){
 	var ele = newEle("div", decodeDate(time) + " - " + msg + " buzzed");
 	$(ele).addClass("history");
 	$("#history").prepend(ele);
-	$("link[rel*='shortcut icon'").attr("href","faviconred.png");
+
 });
 
 socket.on('your buzz', function(msg, time){
@@ -271,7 +271,6 @@ socket.on('clear', function(){
 	$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled", false);
 	$('#container').text("").hide(350);
 	$('.clear').css('visibility', 'hidden');
-	$("link[rel*='shortcut icon'").attr("href","favicon.png");
 });
 
 socket.on('good name', function(msg){
@@ -289,7 +288,6 @@ socket.on('good name', function(msg){
 	$("#username").remove();
 	$("#popup").remove();
 	finished = true;
-	$("link[rel*='shortcut icon'").attr("href","favicon.png");
 });
 
 socket.on('bad name', function(){
@@ -297,9 +295,11 @@ socket.on('bad name', function(){
 		name = genRandomName();
 		checkname(name);
 	}
-	$("#popup").show();
-	$("#username").show();
-	alert("Invalid name or username already taken");
+	else{
+		$("#popup").show();
+		$("#username").show();
+		alert("Invalid name or username already taken");
+	}
 });
 
 socket.on('get room', function(msg){
@@ -353,7 +353,12 @@ socket.on('add names', function(msg, id, isNew, time){
 		var ele = newEle("div", decodeDate(time) + " - " + JSON.parse(msg)[0] + " has joined");
 		$(ele).addClass('history');
 		$("#history").prepend(ele);
-	}
+		$('#container').text(JSON.parse(msg) + " joined");
+		$('#container').show(250);
+		setTimeout(function(){
+			$('#container').text("").hide(350);
+		}, 2500);
+		}
 });
 
 socket.on('remove name', function(msg, time, id){
@@ -361,6 +366,13 @@ socket.on('remove name', function(msg, time, id){
 	$(ele).addClass('history');
 	$("#history").prepend(ele);
 	$("#" + id).remove();
+	$('#container').text(msg + " left");
+	$('#container').show(250);
+	setTimeout(function(){
+		$('#container').text("").hide(350);
+	}, 2500);
+
+	
 });
 $("#container").hide();
 $("#usernameinput").hide();

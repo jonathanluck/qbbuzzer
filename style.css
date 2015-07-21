@@ -1,10 +1,16 @@
 body {
     font-family: Futura,Trebuchet MS,Arial,sans-serif;
 	text-align: center;
-	background-color: #1A1A1A;
+	background-color: #2D2D2D;
 	color: #FFFFFF;
 }
+#div::-webkit-scrollbar { 
+    display: none; 
+}
 
+#div::-moz-scrollbar { 
+    display: none; 
+}
 button {
     border-radius: 5px;
     border-style: none;
@@ -24,7 +30,7 @@ button:active {
 }
 
 span{
- color:#2275D4;
+ color: #3A87DF;
 }
 .submit {
     font-size: 20px;
@@ -59,11 +65,11 @@ span{
 }
 
 .clear {
-    background-color: #9E9E9E;
-    color: #FFFFFF;
+    background-color: #FFFFFF;
+    color: #2D2D2D;
 }
 .clear:hover {
-    background-color: #BDBDBD;
+
 }
 
 .settings {
@@ -120,7 +126,7 @@ span{
 
 #container {
     position: relative;
-    background-color: #606060;
+    background-color: #FFFFFF;
     border-radius: 3px;
     text-align: center;
     margin-bottom: 10px;
@@ -128,7 +134,7 @@ span{
     display: inline;
     margin-right: auto;
     margin-left: auto;
-    color: #FFFFFF;
+    color: #000000;
 }
 
 #infobox {
@@ -145,6 +151,8 @@ span{
 	color: #000000;
 	border-radius: 3px;
 	padding-bottom:3px;
+	width: 100%;
+	overflow:hidden;
 }
 
 #users {
@@ -156,17 +164,15 @@ span{
     margin-right: auto;
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
+	overflow-y:auto;
+	max-height: 150px;
+
 }
 #users div{
 	padding-left: 2px;
-	overflow-x:hidden;
-	
+	overflow-x: hidden;
+	color: #949494;
 }
-#users div:nth-child(even) {
-    background-color: #555555;
-    color: #FFFFFF;
-}
-
 #info {
     background-color: #FFFFFF;
     border-radius: 5px;
@@ -174,8 +180,9 @@ span{
     margin-right: auto;
     margin-left: auto;
     color: #000000;
-    width: 290px;
+    width: 100%;
     overflow-x: hidden;
+	margin-bottom: 4px;
 }
 
 #roomlist {
@@ -185,7 +192,7 @@ span{
     padding-left: 2px;
     width: 375px;
     height: 170px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
 	text-align:left;
 }
@@ -204,10 +211,13 @@ span{
 
 
 #historywrapper {
-    width: 400px;
+    width: 375px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+	background-color: #FFFFFF;
+	border-radius: 3px;
+	color: #000000;
 }
 
 #historywrapper button {
@@ -218,6 +228,7 @@ span{
     margin-top: 0px;
     margin-bottom: 5px;
     padding: 0px 0px 0px 0px;
+	overflow:hidden;
 }
 
 #history {
@@ -225,27 +236,22 @@ span{
     margin-left: auto;
     margin-right: auto;
     padding-left: 2px;
-    width: 375px;
+    width: 365px;
     height: 170px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
-}
-
-#history div:nth-child(even) {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    background-color: #555555;
-    color: #FFFFFF;
 }
 
 #history div {
     text-align: left;
-    padding-left: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+	color:#949494;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 525px) {
 	#container {
 		font-size:20px;
 	}
@@ -285,10 +291,13 @@ span{
     }
 	#users{
 		width:100%;
-		max-height: 100px;
+		max-height: 120px;
 		text-align:left;
-		overflow-y:scroll;
 		overflow-x:hidden;
+	}
+	#users div{
+		padding-top:2px;
+		padding-bottom:2px;
 	}
 	
 	#ulistwrapper{
@@ -301,7 +310,7 @@ span{
 
     #historywrapper {
         font-size: 20px;
-        width: 90%;
+        width: 98.5%;
     }
 
     #history {
