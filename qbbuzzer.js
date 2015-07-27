@@ -1,6 +1,11 @@
-var socket = io();
+var socket = io.connect("http://192.168.1.149:8080",{
+	'reconnect': true,
+	'reconnection delay': 500,
+	'max reconnection attempts': 10,
+	'forceNew':true });
 var name = "";
 var room = "";
+var title = "";
 var playsound = true;
 var dispinfo = true;
 var disphist = true;
@@ -11,6 +16,9 @@ var buzzed = false;
 var emptyname = false;
 var finished = false;
 var canSpace = true;
+var suppress = false;
+var pingtimes = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+var index = 0;
 var lastbuzz = 0;
 var timeoutID;
 var clearTimer;
@@ -57,6 +65,23 @@ function getroomlist(){
 	socket.emit("get roomlist");
 
 }
+function reconnect(){
+	$("#info").empty();
+	$('#history').empty();
+	$("#users").empty();
+	socket.io.disconnect();
+	setTimeout(function(){
+		socket.io.connect();
+		socket.emit("check name", name);
+		socket.emit("send room", room);
+	},1000);
+}
+function reload(){
+	localStorage.setItem("name",name);
+	localStorage.setItem("room",room);
+	localStorage.setItem("refreshed","true");
+	setTimeout(function(){location.reload(false)},500);
+}
 
 $(document).ready(function(){
 	$('#roomnameinput').keypress(
@@ -84,6 +109,17 @@ $(document).ready(function(){
 	);
 	$('.clear').css('visibility', 'hidden');
 	circle();
+	if(localStorage.getItem("refreshed") == "true"){
+		document.getElementById("usernameinput").value = localStorage.getItem("name");
+		document.getElementById("roomnameinput").value = localStorage.getItem("room");
+		room = localStorage.getItem("room");
+		getroom(room);
+		localStorage.setItem("refreshed","");
+	}
+	else{
+		document.getElementById("usernameinput").value = "";
+		document.getElementById("roomnameinput").value = "";
+	}
 });
 
 function newEle(ele, text){
@@ -200,7 +236,7 @@ function togglesettings(){
 		$("#changesound").hide();
 		$("#infobutton").hide();
 		$("#togglehist").hide();
-		$("#togglesettings").text("Show Settings");
+		$("#reconnect").hide();
 	}
 	else{
 		dispsettings = true;
@@ -208,7 +244,7 @@ function togglesettings(){
 		$("#changesound").show();
 		$("#infobutton").show();
 		$("#togglehist").show();
-		$("#togglesettings").text("Hide Settings");
+		$("#reconnect").show();
 	}
 }
 
@@ -237,20 +273,21 @@ function genRandomName(){
 	return colors[Math.floor(Math.random() * colors.length)]+ " " + animals[Math.floor(Math.random() * animals.length)]
 }
 socket.on('locked', function(msg, time){
-	$('#buzzbutton').addClass('locked').removeClass('default').text('Locked');
+	$('#buzzbutton').addClass('locked').removeClass('default').text('LOCKED');
+	playSound();
 	$('#container').text(msg + " has buzzed");
 	$('#container').show(250);
 	$('.clear').css('visibility', 'hidden');
-	playSound();
 	var ele = newEle("div", decodeDate(time) + " - " + msg + " buzzed");
 	$(ele).addClass("history");
 	$("#history").prepend(ele);
+	$(document).attr("title", msg+ " buzzed");
 
 });
 
 socket.on('your buzz', function(msg, time){
 	buzzed = true;
-	$('#buzzbutton').addClass('buzzed').removeClass('default').text('Your Buzz').prop("disabled", true);
+	$('#buzzbutton').addClass('buzzed').removeClass('default').text('YOUR BUZZ').prop("disabled", true);
 	var t = 5;
 	playSound();
 	var div = document.createElement("div");
@@ -260,28 +297,30 @@ socket.on('your buzz', function(msg, time){
 	$(div).addClass('history').append(span);
 	$("#history").prepend(div);
 	lastbuzz = Date.now();
-	$('.clear').css('visibility', 'visible').text("Clear 5");
+	$('.clear').css('visibility', 'visible').text("CLEAR 5");
 	clearTimer = setInterval(function(){
-		$('.clear').text("Clear " + (--t))
+		$('.clear').text("CLEAR " + (--t))
 	}, 1000);
 	timeoutID = setTimeout(clearbuzzer, 5000);
 });
 
 socket.on('clear', function(){
-	$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('Buzz').prop("disabled", false);
+	$('#buzzbutton').addClass('default').removeClass('buzzed').removeClass('locked').text('BUZZ').prop("disabled", false);
 	$('#container').text("").hide(350);
 	$('.clear').css('visibility', 'hidden');
+	$(document).attr("title", title);
 });
 
 socket.on('good name', function(msg){
 	name = msg;
+	title = "QBBuzzer - " + msg + " - " + room;
 	var p = document.createElement("p");
-	$(p).text("Username: ");
+	$(p).text("USERNAME");
 	var span = document.createElement("span");
 	$(span).text(msg);
 	$(p).append(document.createElement("br")).append(span);
 	$("#info").append(p);
-	$(document).attr("title", "QBBuzzer - " + msg + " - " + room);
+	$(document).attr("title", title);
 	var div = document.createElement("div");
 	$(div).append(newEle("span",msg));
 	$("#users").prepend(div);
@@ -307,7 +346,7 @@ socket.on('get room', function(msg){
 	$("#username").show();
 	$("#usernameinput").focus();
 	room = msg;
-	$("#info").text("Room: ").append(document.createElement("br")).append(newEle("span",msg));
+	$("#info").text("ROOM").append(document.createElement("br")).append(newEle("span",msg));
 });
 
 socket.on('room full', function(msg){
@@ -374,5 +413,17 @@ socket.on('remove name', function(msg, time, id){
 
 	
 });
+socket.on('pong',function(time, svrtime, index){
+	pingtimes[index] = [time, svrtime, Date.now()-time];
+});
+
+/*socket.on('disconnect',function(){
+	setTimeout(function(){
+	if(confirm("You have been disconnected from the server. Would you like to attempt to reconnect?")){
+		reload();
+	}
+	},1000);
+});*/
+
 $("#container").hide();
 $("#usernameinput").hide();

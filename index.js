@@ -10,7 +10,6 @@ var roomreq = {};
 if(typeof __dirname == "undefined") {
 	__dirname = "C:\\Program Files\\nodejs\\qbbuzzer";
 }
-
 //allows server to send all files needed for the website
 files = ['', 'index.html', 'style.css', 'pop.mp3', 'socketio.js', 'qbbuzzer.js', 'buzzsound.mp3', 'favicon.png', 'faviconred.png'];
 files.forEach(function(a){
@@ -126,13 +125,13 @@ function Room(name){
 	};
 	//removes a user from the room
 	this.removeUser = function(user){
-		if(this.buzzer == user.name) {
-			this.clear();
-		}
 		for (var i = 0; i < this.users.length; i++) {
 			if(this.users[i] == user) {
 				this.users.splice(i, 1);
 			}
+		}
+		if(this.buzzer == user.name) {
+			this.clear();
 		}
 		this.users.forEach(function(u){
 			u.socket.emit('remove name', user.name, Date.now(), md5.CryptoJS.MD5(user.socket.id).toString());
@@ -246,6 +245,9 @@ io.on('connection', function(socket){
 			delete roomreq[socket.id];
 		}
 	});
+	socket.on('ping',function(time,index){
+		socket.emit('pong', time, Date.now(), index);
+	});
 
 	//clears the buzzer when a user that has buzzed disconnects
 	//sends a message to all clients telling them to remove disconnected client from their lists
@@ -253,9 +255,11 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		var user = users[socket.id];
 		if(typeof user !== 'undefined') {
+			console.log(user.name);
 			var room = users[socket.id].room;
 			if(typeof room != 'undefined') {
 				room.removeUser(users[socket.id]);
+				console.log(room.users);
 				if(rooms[room.name.toLowerCase()].users.length == 0) {
 					delete rooms[room.name.toLowerCase()];
 				}
