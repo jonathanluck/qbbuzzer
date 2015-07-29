@@ -71,6 +71,8 @@ function reload(){
 $(document).ready(function(){
 	$("#roomname").hide();
 	$("#username").hide();
+	$("#container").hide();
+	$("#usernameinput").hide();
 	$('#roomnameinput').keypress(
 		function(e){
 			if(!e) {
@@ -338,6 +340,7 @@ socket.on('get room', function(msg){
 	$("#roomname").remove();
 	if(localStorage.getItem("refreshed") != "true"){
 		$("#username").show();
+		$("#usernameinput").show();
 	}
 	$("#usernameinput").focus();
 	room = msg;
@@ -418,5 +421,5 @@ setInterval(function(){
 	}
 },2000)
 
-$("#container").hide();
-$("#usernameinput").hide();
+
+$("head").append('<link rel="stylesheet" type="text/css" href="style.css">');

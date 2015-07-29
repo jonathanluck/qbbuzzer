@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html>
-
     <head>
         <title>QBBuzzer - Free online quizbowl buzzer</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
         <meta name="description" content="Free online quizbowl buzzer system">
-        <link rel="stylesheet" type="text/css" href="style.css">
-        <script async src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-        <script src="http://cdn.socket.io/socket.io-1.3.5.js"></script>
+		<script src="http://cdn.socket.io/socket.io-1.3.5.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script async src="qbbuzzer.js"></script>
         <audio id="sound" src="pop.mp3" preload="auto"></audio>
         <!--CC Attribution 3.0: http://soundbible.com/2067-Blop.html-->
         <audio id="sound2" src="buzzsound.mp3" preload="auto"></audio>
-        <script src="qbbuzzer.js"></script>
         <script>(function(i, s, o, g, r, a, m){
             i['GoogleAnalyticsObject'] = r;
             i[r] = i[r] || function(){
@@ -26,8 +24,6 @@
         ga('create', 'UA-61778253-1', 'auto');
         ga('send', 'pageview');</script>
     </head>
-
-
     <body>
         <div id="wrapper">
             <div id="popup">
@@ -89,17 +85,14 @@
 		<br>
         <div id="historywrapper">
             HISTORY
-
             <div id="history"></div>
         </div>
         <br>
         <button id="clearhist" class="settings" onclick="$('#history').empty()">
-            Clear History
+            CLEAR HISTORY
         </button>
         <!--Idea credits to KJiang for the clear history button.-->
-
         </div>
     </body>
-
     <!--Written by Jonathan Luck and Kevin Wu (with help from a few others)-->
 </html>
