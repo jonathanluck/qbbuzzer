@@ -1,4 +1,6 @@
 var app = require('express')();
+var compression = require('compression');
+var zlib = require('zlib');
 var md5 = require(__dirname+'/md5.js');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -7,11 +9,12 @@ var users = {};
 var rooms = {};
 var ips = {"": ""};
 var roomreq = {};
+app.use(compression(zlib.Z_BEST_COMPRESSION)); 
 if(typeof __dirname == "undefined") {
 	__dirname = "C:\\Program Files\\nodejs\\qbbuzzer";
 }
 //allows server to send all files needed for the website
-files = ['', 'index.html', 'style.css', 'pop.mp3', 'socketio.js', 'qbbuzzer.js', 'buzzsound.mp3', 'favicon.png', 'faviconred.png'];
+files = ['', 'index.html', 'style.css', 'pop.mp3', 'socketio.js', 'qbbuzzer.js', 'buzzsound.mp3'];
 files.forEach(function(a){
 	app.get('/' + a, function(req, res){
 		res.sendFile(__dirname + '/' + a);
@@ -245,8 +248,8 @@ io.on('connection', function(socket){
 			delete roomreq[socket.id];
 		}
 	});
-	socket.on('ping',function(time,index){
-		socket.emit('pong', time, Date.now(), index);
+	socket.on('ping',function(){
+		socket.emit('pong');
 	});
 
 	//clears the buzzer when a user that has buzzed disconnects
@@ -255,11 +258,9 @@ io.on('connection', function(socket){
 	socket.on('disconnect', function(){
 		var user = users[socket.id];
 		if(typeof user !== 'undefined') {
-			console.log(user.name);
 			var room = users[socket.id].room;
 			if(typeof room != 'undefined') {
 				room.removeUser(users[socket.id]);
-				console.log(room.users);
 				if(rooms[room.name.toLowerCase()].users.length == 0) {
 					delete rooms[room.name.toLowerCase()];
 				}

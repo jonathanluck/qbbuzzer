@@ -1,8 +1,4 @@
-var socket = io.connect("http://192.168.1.149:8080",{
-	'reconnect': true,
-	'reconnection delay': 500,
-	'max reconnection attempts': 10,
-	'forceNew':true });
+var socket = io.connect();
 var name = "";
 var room = "";
 var title = "";
@@ -17,8 +13,8 @@ var emptyname = false;
 var finished = false;
 var canSpace = true;
 var suppress = false;
-var pingtimes = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
-var index = 0;
+var lastping = Date.now();
+var canReload = false;
 var lastbuzz = 0;
 var timeoutID;
 var clearTimer;
@@ -29,7 +25,7 @@ function entername(){
 	}
 	else{
 		emptyname = true;
-		name = genRandomName()
+		name = genRandomName();
 	}
 	checkname(name);
 }
@@ -63,20 +59,9 @@ function getroom(str){
 function getroomlist(){
 	$("#roomlistbutton").text("Refresh List");
 	socket.emit("get roomlist");
-
-}
-function reconnect(){
-	$("#info").empty();
-	$('#history').empty();
-	$("#users").empty();
-	socket.io.disconnect();
-	setTimeout(function(){
-		socket.io.connect();
-		socket.emit("check name", name);
-		socket.emit("send room", room);
-	},1000);
 }
 function reload(){
+	lastping = Date.now();
 	localStorage.setItem("name",name);
 	localStorage.setItem("room",room);
 	localStorage.setItem("refreshed","true");
@@ -84,6 +69,8 @@ function reload(){
 }
 
 $(document).ready(function(){
+	$("#roomname").hide();
+	$("#username").hide();
 	$('#roomnameinput').keypress(
 		function(e){
 			if(!e) {
@@ -110,13 +97,19 @@ $(document).ready(function(){
 	$('.clear').css('visibility', 'hidden');
 	circle();
 	if(localStorage.getItem("refreshed") == "true"){
-		document.getElementById("usernameinput").value = localStorage.getItem("name");
-		document.getElementById("roomnameinput").value = localStorage.getItem("room");
+		$("#popup").hide();
+		name = localStorage.getItem("name");
 		room = localStorage.getItem("room");
 		getroom(room);
-		localStorage.setItem("refreshed","");
+		$("#username").hide();
+		setTimeout(function(){
+			checkname(name);
+			localStorage.setItem("refreshed","");
+		},500);
+		
 	}
 	else{
+		$("#roomname").show();
 		document.getElementById("usernameinput").value = "";
 		document.getElementById("roomnameinput").value = "";
 	}
@@ -343,7 +336,9 @@ socket.on('bad name', function(){
 
 socket.on('get room', function(msg){
 	$("#roomname").remove();
-	$("#username").show();
+	if(localStorage.getItem("refreshed") != "true"){
+		$("#username").show();
+	}
 	$("#usernameinput").focus();
 	room = msg;
 	$("#info").text("ROOM").append(document.createElement("br")).append(newEle("span",msg));
@@ -410,20 +405,18 @@ socket.on('remove name', function(msg, time, id){
 	setTimeout(function(){
 		$('#container').text("").hide(350);
 	}, 2500);
-
-	
 });
-socket.on('pong',function(time, svrtime, index){
-	pingtimes[index] = [time, svrtime, Date.now()-time];
+socket.on('pong',function(){
+	lastping = Date.now();
 });
 
-/*socket.on('disconnect',function(){
-	setTimeout(function(){
-	if(confirm("You have been disconnected from the server. Would you like to attempt to reconnect?")){
+setInterval(function(){
+	socket.emit('ping');
+	if(Date.now()-lastping>=7000&&!canReload){
 		reload();
+		canReload = false;
 	}
-	},1000);
-});*/
+},2000)
 
 $("#container").hide();
 $("#usernameinput").hide();
