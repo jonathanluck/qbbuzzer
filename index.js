@@ -9,12 +9,14 @@ var users = {};
 var rooms = {};
 var ips = {"": ""};
 var roomreq = {};
+//allows compression of sent resources to reduce bandwith used
 app.use(compression(zlib.Z_BEST_COMPRESSION)); 
 if(typeof __dirname == "undefined") {
 	__dirname = "C:\\Program Files\\nodejs\\qbbuzzer";
 }
-//allows server to send all files needed for the website
+//list of files the user is allowed to access
 files = ['', 'index.html', 'style.css', 'pop.mp3', 'socketio.js', 'qbbuzzer.js', 'buzzsound.mp3'];
+//allows the server to send files to the client in response to a HTTP GET request
 files.forEach(function(a){
 	app.get('/' + a, function(req, res){
 		res.sendFile(__dirname + '/' + a);
@@ -26,7 +28,7 @@ app.use(function(req, res){
 	res.status(404).send('<title>404</title><h1>404: Oh noes! Page not Found</h1><br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/200/300">');
 });
 
-//sends a 500 error for a internal server errors
+//sends a 500 error for internal server errors
 app.use(function(req, res){
 	res.status(404).send('<title>500</title><h1>500: Oh noes! Internal server error</h1><br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/200/300">');
 });
@@ -46,7 +48,7 @@ function checkname(testname, room){
 	}).indexOf(testname) > -1);
 }
 
-//generates a random username if the user does not provide a valid name
+//generates a random username if an empty string is send to the server
 function genrandomname(){
 	var string = "";
 	var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890";
@@ -56,7 +58,7 @@ function genrandomname(){
 	return string;
 }
 
-//sanitization of user input to remove whitespace and clip length
+//sanitization of user input to remove whitespace and clip length (input validation)
 function sanitize(string){
 	string = (string + "").trim();
 	if(string.length > 50) {
@@ -72,7 +74,7 @@ function addRoom(room){
 	}
 }
 
-//room object
+//room object. Contains: name, list of active users, user who has buzzed, user who last buzzed, timestamp of last buzz, timestamp of current buzz
 function Room(name){
 	this.name = name;
 	this.users = [];
@@ -81,7 +83,7 @@ function Room(name){
 	this.laststamp = "";
 	this.stamp = 0;
 
-	//sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz
+	//When the server recieves a buzz, sends a lock signal to everyone but the buzzer, who gets a signal indicating it is their buzz. Includes rate limitation to prevent spamming from single user
 	this.buzz = function(name){
 		if(this.buzzer == "") {
 			if(this.lastbuzzer != name || Date.now() - this.laststamp > 500) {
@@ -100,7 +102,7 @@ function Room(name){
 			}
 		}
 	};
-	//clears the buzzer for the room
+	//clears the buzzer for the room. Includes rate limitation to prevent spam
 	this.clear = function(){
 		if(Date.now() - this.laststamp > 100) {
 			this.buzzer = "";
@@ -110,7 +112,7 @@ function Room(name){
 			this.stamp = 0;
 		}
 	};
-	//adds a new user to the room
+	//adds a new user to the room. Sends new user a list of current users in the room. Sends all other users the new user
 	this.addUser = function(user){
 		
 		user.socket.emit("add names", JSON.stringify(this.users.map(function(u){
@@ -126,7 +128,7 @@ function Room(name){
 		}
 		this.users.push(user);
 	};
-	//removes a user from the room
+	//removes a user from the room. Tells other users to remove the disconnected user
 	this.removeUser = function(user){
 		for (var i = 0; i < this.users.length; i++) {
 			if(this.users[i] == user) {
@@ -142,14 +144,14 @@ function Room(name){
 	}
 }
 
-//rakes a room name and checks if the room has been locked for at least 5 seconds, if so it clears the room
+//takes a room name as input and checks if the room has been locked for at least 5 seconds, if so it clears the room (server-side backup if client-side autoclear is tampered with/fails)
 function autoclear(room){
 	if(rooms[room].stamp > 0 && Date.now() - rooms[room].stamp >= 5000) {
 		rooms[room].clear();
 	}
 }
 
-//user obeject
+//user obeject. Contains: username, room name, and socketID
 function User(name, socketID, roomName){
 	users[socketID] = this;
 	if(typeof rooms[roomName] == "undefined") {
@@ -162,19 +164,19 @@ function User(name, socketID, roomName){
 
 //socket connection stuff
 io.on('connection', function(socket){
-	//ip logging
+	//ip logging. Writes IP address to a file when a client connects to the server.
 	ips[socket.id] = socket.request.connection.remoteAddress;
 	fs.appendFile('iplog.log',  new Date(Date.now()) + "\t" + socket.request.connection.remoteAddress  + "\r\n", function(e){
 	});
 
-	//recieves a buzz
+	//recieves a buzz signal from the clients. Calls room's buzz method
 	socket.on('buzz', function(){
 		if(typeof users[socket.id] != "undefined") {
 			users[socket.id].room.buzz(users[socket.id].name);
 		}
 	});
 
-	//sends a clear signal to all clients and allows anyone to buzz again
+	//recieves a clear signal from the the clients. Calls the room's clear method
 	socket.on('clear', function(){
 		if(typeof users[socket.id] != "undefined") {
 			if(users[socket.id].name == users[socket.id].room.buzzer) {
@@ -183,6 +185,7 @@ io.on('connection', function(socket){
 		}
 	});
 	
+	//sends a list of rooms to clients that request it. Has rate limitations to prevent spam
 	socket.on('get roomlist', function(){
 		if(typeof roomreq[socket.id] == "undefined") {
 			roomreq[socket.id] = Date.now();
@@ -204,10 +207,8 @@ io.on('connection', function(socket){
 		}
 	});
 
-	//checks if a name is useable. locks the buzzer if someone has already buzzed.
-	//broadcasts to all clients to add the new name
-	//adds all current names to new client
-	//if the name is already used, then rejects the name
+	//checks if a name is useable (available and valid). locks the buzzer if someone has already buzzed.
+	//if the name is already used or is invalid, then rejects the name
 	socket.on('check name', function(name){
 		name = sanitize(name);
 		if(name.length == 0) {
@@ -248,13 +249,15 @@ io.on('connection', function(socket){
 			delete roomreq[socket.id];
 		}
 	});
+	
+	//responds to pings from the client
 	socket.on('ping',function(){
 		socket.emit('pong');
 	});
 
 	//clears the buzzer when a user that has buzzed disconnects
 	//sends a message to all clients telling them to remove disconnected client from their lists
-	//frees up the username from the list of names
+	//frees up the username from the list of names, deletes the user from other maps that contain references to the socketid
 	socket.on('disconnect', function(){
 		var user = users[socket.id];
 		if(typeof user !== 'undefined') {
@@ -284,7 +287,7 @@ setInterval(function(){
 	console.log("");
 }, 300000);
 
-//loops through the map of rooms to perform autoclearing functions every second
+//loops through the map of rooms to perform server-side autoclearing functions every second
 setInterval(function(){
 	Object.keys(rooms).forEach(function(e){
 		autoclear(e);

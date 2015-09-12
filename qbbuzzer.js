@@ -420,6 +420,3 @@ setInterval(function(){
 		canReload = false;
 	}
 },2000)
-
-
-$("head").append('<link rel="stylesheet" type="text/css" href="style.css">');
