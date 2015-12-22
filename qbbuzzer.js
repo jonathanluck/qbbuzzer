@@ -7,7 +7,7 @@ var dispinfo = true;
 var disphist = true;
 var dispsettings = false;
 var sound = "pop";
-var audio = document.getElementById("sound");
+var audio = "sound";
 var buzzed = false;
 var emptyname = false;
 var finished = false;
@@ -194,19 +194,19 @@ function togglesound(){
 
 function playSound(){
 	if(playsound) {
-		audio.play();
+		document.getElementById(audio).play();
 	}
 }
 
 function changesound(){
 	if(sound == "pop") {
 		sound = "buzz";
-		audio = document.getElementById("sound2");
+		audio = ="sound2";
 		$("#changesound").text("Sound: Buzz");
 	}
 	else if(sound == "buzz") {
 		sound = "pop";
-		audio = document.getElementById("sound");
+		audio = "sound";
 		$("#changesound").text("Sound: Pop");
 	}
 }
