@@ -201,7 +201,7 @@ function playSound(){
 function changesound(){
 	if(sound == "pop") {
 		sound = "buzz";
-		audio = ="sound2";
+		audio = "sound2";
 		$("#changesound").text("Sound: Buzz");
 	}
 	else if(sound == "buzz") {
