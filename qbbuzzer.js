@@ -18,6 +18,10 @@ var canReload = false;
 var lastbuzz = 0;
 var timeoutID;
 var clearTimer;
+var newLink = document.createElement('link');
+var redIcon = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAJOgAACToAYJjBRwAAAAMSURBVBhXY7jIxQUAApUA5qdS4JwAAAAASUVORK5CYII="
+var greenIcon = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAJOgAACToAYJjBRwAAAAMSURBVBhXY+BfLAMAAZMAz1929fMAAAAASUVORK5CYII="
+
 
 function entername(){
 	if(document.getElementById("usernameinput").value.trim().length > 0) {
@@ -121,6 +125,10 @@ function newEle(ele, text){
 	ele = document.createElement(ele);
 	$(ele).text(text);
 	return ele;
+}
+
+function changeIcon(imgSrc){
+    newLink.href='data:image/png;base64,' + imgSrc;
 }
 
 window.addEventListener("keydown", function(a){
@@ -277,7 +285,7 @@ socket.on('locked', function(msg, time){
 	$(ele).addClass("history");
 	$("#history").prepend(ele);
 	$(document).attr("title", msg+ " buzzed");
-
+	changeIcon(redIcon);
 });
 
 socket.on('your buzz', function(msg, time){
@@ -293,6 +301,7 @@ socket.on('your buzz', function(msg, time){
 	$("#history").prepend(div);
 	lastbuzz = Date.now();
 	$('.clear').css('visibility', 'visible').text("CLEAR 5");
+	$(".clear").focus();
 	clearTimer = setInterval(function(){
 		$('.clear').text("CLEAR " + (--t))
 	}, 1000);
@@ -304,6 +313,7 @@ socket.on('clear', function(){
 	$('#container').text("").hide(350);
 	$('.clear').css('visibility', 'hidden');
 	$(document).attr("title", title);
+	changeIcon(greenIcon);
 });
 
 socket.on('good name', function(msg){
@@ -321,6 +331,10 @@ socket.on('good name', function(msg){
 	$("#users").prepend(div);
 	$("#username").remove();
 	$("#popup").remove();
+	newLink.rel = 'shortcut icon';
+	newLink.href = 'data:image/png;base64,' + greenIcon;
+	document.head.appendChild(newLink);
+	document.getElementById("buzzbutton").addEventListener("touchend",buzz)
 	finished = true;
 });
 
@@ -415,7 +429,7 @@ socket.on('pong',function(){
 
 setInterval(function(){
 	socket.emit('ping');
-	if(Date.now()-lastping>=7000&&!canReload){
+	if(Date.now()-lastping>=10000&&!canReload){
 		reload();
 		canReload = false;
 	}
