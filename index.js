@@ -25,12 +25,12 @@ files.forEach(function(a){
 
 //sends a 404 error if the requested resource is not found
 app.use(function(req, res){
-	res.status(404).send('<title>404</title><h1>404: Oh noes! Page not Found</h1><br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/200/300">');
+	res.status(404).send('<title>404</title><h1>404: Oh noes! Page not Found</h1><br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/400/500">');
 });
 
 //sends a 500 error for internal server errors
 app.use(function(req, res){
-	res.status(404).send('<title>500</title><h1>500: Oh noes! Internal server error</h1><br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/200/300">');
+	res.status(404).send('<title>500</title><h1>500: Oh noes! Internal server error</h1><br>If this error persists, please contact us at contact@qbbuzzer.com<br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/400/500">');
 });
 
 //sanitizes the name then checks if it is already being used for a specific room
