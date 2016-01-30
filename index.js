@@ -30,7 +30,7 @@ app.use(function(req, res){
 
 //sends a 500 error for internal server errors
 app.use(function(req, res){
-	res.status(404).send('<title>500</title><h1>500: Oh noes! Internal server error</h1><br>If this error persists, please contact us at contact@qbbuzzer.com<br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/400/500">');
+	res.status(500).send('<title>500</title><h1>500: Oh noes! Internal server error</h1><br>If this error persists, please contact us at contact@qbbuzzer.com<br>Here is a placekitten to make you feel better:<br><br><img src="http://placekitten.com/g/400/500">');
 });
 
 //sanitizes the name then checks if it is already being used for a specific room
@@ -264,7 +264,8 @@ io.on('connection', function(socket){
 			var room = users[socket.id].room;
 			if(typeof room != 'undefined') {
 				room.removeUser(users[socket.id]);
-				if(rooms[room.name.toLowerCase()].users.length == 0) {
+				//prevents race condition
+				if(typeof rooms[room.name.toLowerCase()] != 'undefined' && rooms[room.name.toLowerCase()].users.length == 0) {
 					delete rooms[room.name.toLowerCase()];
 				}
 			}

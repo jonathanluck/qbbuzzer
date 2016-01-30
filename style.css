@@ -1,214 +1,211 @@
 body {
-    font-family: Futura,Trebuchet MS,Arial,sans-serif;
+	font-family: Futura, Trebuchet MS, Arial, sans-serif;
 	text-align: center;
 	background-color: #2D2D2D;
 	color: #FFFFFF;
 }
 button {
-    border-radius: 5px;
-    border-style: none;
-    font-size: 57px;
-    display: block;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top: 10px;
-    padding: 8px 17px 8px 17px;
-    background-color: #FFFFFF;
-	color:#FFFFFF;
-	cursor:pointer;
+	border-radius: 5px;
+	border-style: none;
+	font-size: 57px;
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+	padding: 8px 17px 8px 17px;
+	background-color: #FFFFFF;
+	color: #FFFFFF;
+	cursor: pointer;
 }
 
 button:active {
-    box-shadow: 1px 1px 2px #505050;
+	box-shadow: 1px 1px 2px #505050;
 }
 
-span{
- color: #3A87DF;
+span {
+	color: #3A87DF;
 }
 .submit {
-    font-size: 20px;
-    background-color: #2275D4;
+	font-size: 20px;
+	background-color: #2275D4;
 }
 
 .submit:hover {
-    background-color: #3e89e0;
+	background-color: #3e89e0;
 }
 
 .default {
-    color: #0fa31c;
+	color: #0fa31c;
 }
 
 .default:hover {
-    color: #11bb1f;
+	color: #11bb1f;
 }
 
 .buzzed {
-    color: #f2c32c;
+	color: #f2c32c;
 }
 
 .buzzed :active {
-    box-shadow: none;
+	box-shadow: none;
 }
 
 .locked {
 	color: #D10A0A;
-    box-shadow: none;
-	cursor:default;
-	background-color:#FFFFFF;
+	box-shadow: none;
+	cursor: default;
+	background-color: #FFFFFF;
 }
 
 .clear {
-    background-color: #FFFFFF;
-    color: #2D2D2D;
+	background-color: #FFFFFF;
+	color: #2D2D2D;
 }
 .clear:hover {
 
 }
 
 .settings {
-    font-size: 17px;
-    background-color: #FFFFFF;
-	color:#000000;
+	font-size: 17px;
+	background-color: #FFFFFF;
+	color: #000000;
 	width: 145px;
 	padding: 7px 0px 7px 0px;
 }
 
 .history {
-    text-align: left;
-    font-size: 17px;
-    padding-left: 5px;
+	text-align: left;
+	font-size: 17px;
+	padding-left: 5px;
 }
 
 .inputforms {
-    z-index: 2;
-    padding: 10px 10px 10px 10px;
-    opacity: 1;
-    background-color: #FFFFFF;
+	z-index: 2;
+	padding: 10px 10px 10px 10px;
+	opacity: 1;
+	background-color: #FFFFFF;
 	color: #000000;
-    border-width: 3px;
-    border-color: #000000;
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 30px;
-    width: 500px;
-    max-width: 90%;
-    margin: auto;
-    font-size: 20px;
+	border-width: 3px;
+	border-color: #000000;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 30px;
+	width: 500px;
+	max-width: 90%;
+	margin: auto;
+	font-size: 20px;
 	text-align: center;
 }
 
 .inputforms input {
-    height: 30px;
-    font-size: 20px;
-    padding-left: 10px;
+	height: 30px;
+	font-size: 20px;
+	padding-left: 10px;
 }
 
-
-
 #popup {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: #555555;
-    opacity: 0.9;
-    z-index: 1;
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: #555555;
+	opacity: 0.9;
+	z-index: 1;
 }
 
 #container {
-    position: relative;
-    background-color: #FFFFFF;
-    border-radius: 3px;
-    text-align: center;
-    margin-bottom: 10px;
-    padding: 2px 6px 2px 6px;
-    display: inline;
-    margin-right: auto;
-    margin-left: auto;
-    color: #000000;
+	position: relative;
+	background-color: #FFFFFF;
+	border-radius: 3px;
+	text-align: center;
+	margin-bottom: 10px;
+	padding: 2px 6px 2px 6px;
+	display: inline;
+	margin-right: auto;
+	margin-left: auto;
+	color: #000000;
 }
 
 #infobox {
-    width: 375px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+	width: 375px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 	padding: 3px 3px 3px 3px;
-	margin-bottom:3px;
+	margin-bottom: 3px;
 }
 
-#ulistwrapper{
+#ulistwrapper {
 	background-color: #FFFFFF;
 	color: #000000;
 	border-radius: 3px;
-	padding-bottom:3px;
+	padding-bottom: 3px;
 	width: 100%;
-	overflow:hidden;
-	padding-top:5px;
+	overflow: hidden;
+	padding-top: 5px;
 }
 
 #users {
 	background-color: #ffffff;
 	color: #000000;
-    text-align: center;
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-	overflow-y:auto;
+	text-align: center;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	overflow-y: auto;
 	max-height: 150px;
 }
-#users div{
+#users div {
 	padding-left: 2px;
 	overflow-x: hidden;
 	color: #949494;
 }
 #info {
-    background-color: #FFFFFF;
-    border-radius: 5px;
-    margin-top: 10px;
-    margin-right: auto;
-    margin-left: auto;
-    color: #000000;
-    width: 100%;
-    overflow-x: hidden;
+	background-color: #FFFFFF;
+	border-radius: 5px;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-left: auto;
+	color: #000000;
+	width: 100%;
+	overflow-x: hidden;
 	margin-bottom: 4px;
 	padding-top: 5px;
 }
 
 #roomlist {
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 2px;
-    width: 375px;
-    height: 170px;
-    overflow-y: auto;
-    overflow-x: hidden;
-	text-align:left;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 2px;
+	width: 375px;
+	height: 170px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	text-align: left;
 }
-#roomlist div{
-	cursor:pointer;
+#roomlist div {
+	cursor: pointer;
 }
 
 #roomlist div:nth-child(even) {
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    background-color: #555555;
-    color: #FFFFFF;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	background-color: #555555;
+	color: #FFFFFF;
 }
 
-
 #historywrapper {
-    width: 375px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+	width: 375px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
 	background-color: #FFFFFF;
 	border-radius: 3px;
 	color: #000000;
@@ -216,105 +213,105 @@ span{
 }
 
 #historywrapper button {
-    font-size: 20px;
-    height: 23px;
-    width: 25px;
-    float: right;
-    margin-top: 0px;
-    margin-bottom: 5px;
-    padding: px 0px 0px 0px;
-	overflow:hidden;
+	font-size: 20px;
+	height: 23px;
+	width: 25px;
+	float: right;
+	margin-top: 0px;
+	margin-bottom: 5px;
+	padding: px 0px 0px 0px;
+	overflow: hidden;
 }
 
 #history {
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 2px;
-    width: 365px;
-    height: 170px;
-    overflow-y: auto;
-    overflow-x: hidden;
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 2px;
+	width: 365px;
+	height: 170px;
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 
 #history div {
-    text-align: left;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-	color:#949494;
+	text-align: left;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	color: #949494;
 }
 
 @media only screen and (max-width: 525px) {
 	#container {
-		font-size:20px;
+		font-size: 20px;
 	}
-    button {
-        font-size: 49px;
-        width: 85%;
-        border-radius: 3px;
+	button {
+		font-size: 49px;
+		width: 85%;
+		border-radius: 3px;
 		padding: 14px 5px 14px 5px;
-    }
+	}
 
-    #buzzbutton {
-		width:85%;
+	#buzzbutton {
+		width: 85%;
 		padding: 0px 0px 0px 0px;
-    }
+	}
 
-    .settings {
-        width: 80%;
-        font-size: 25px;
+	.settings {
+		width: 80%;
+		font-size: 25px;
 		padding: 10px 0px 10px 0px;
-    }
+	}
 
-    #infobox {
-		margin-top:0px;
-        font-size: 20px;
-        width: 98.5%;
+	#infobox {
+		margin-top: 0px;
+		font-size: 20px;
+		width: 98.5%;
 		height: 175px;
 		padding: 0px 0px 0px 0px;
-    }
+	}
 
-    #info {
-        width: 48%;
-		height:100%;
-		float:left;
-		margin-top:0px;
+	#info {
+		width: 48%;
+		height: 100%;
+		float: left;
+		margin-top: 0px;
 		padding: 7px 2px 2px 2px;
 		border-radius: 2px;
-    }
-	#users{
-		width:100%;
+	}
+	#users {
+		width: 100%;
 		max-height: 120px;
-		text-align:left;
-		overflow-x:hidden;
+		text-align: left;
+		overflow-x: hidden;
 	}
-	#users div{
-		padding-top:2px;
-		padding-bottom:2px;
-		font-size:18px;
+	#users div {
+		padding-top: 2px;
+		padding-bottom: 2px;
+		font-size: 18px;
 	}
-	
-	#ulistwrapper{
-		height:100%;
-		width:48%;
-		float:right;
+
+	#ulistwrapper {
+		height: 100%;
+		width: 48%;
+		float: right;
 		border-radius: 2px;
 		padding: 7px 2px 2px 2px;
 	}
 
-    #historywrapper {
-        font-size: 20px;
-        width: 98.5%;
-    }
+	#historywrapper {
+		font-size: 20px;
+		width: 98.5%;
+	}
 
-    #history {
-        width: 90%;
-    }
+	#history {
+		width: 90%;
+	}
 
-    .submit {
-        width: 80%;
-    }
+	.submit {
+		width: 80%;
+	}
 }
 /*Credit to Darren Asaro for design template*/
