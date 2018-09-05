@@ -206,13 +206,17 @@ function playSound(){
 	}
 }
 
-function changesound(){
+function changesound(){ // pop --> buzz --> beep --> pop
 	if(sound == "pop") {
 		sound = "buzz";
-		audio = "sound2";
+		audio = "sound3";
 		$("#changesound").text("Sound: Buzz");
 	}
 	else if(sound == "buzz") {
+		sound = "beep";
+		audio = "sound2";
+		$("#changesound").text("Sound: beep");
+	} else if (sound == "beep") {
 		sound = "pop";
 		audio = "sound";
 		$("#changesound").text("Sound: Pop");
