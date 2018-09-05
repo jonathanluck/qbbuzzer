@@ -5,9 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
         <meta name="description" content="Free online quizbowl buzzer system">
-		<script src="http://cdn.socket.io/socket.io-1.3.5.js"></script>
-        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-        <script src="qbbuzzer.js"></script>
         <audio id="sound" src="pop.mp3" preload="auto"></audio>
         <!--CC Attribution 3.0: http://soundbible.com/2067-Blop.html-->
         <audio id="sound2" src="buzzsound.mp3" preload="auto"></audio>
@@ -94,6 +91,9 @@
         </button>
         <!--Idea credits to KJiang for the clear history button.-->
         </div>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="qbbuzzer.js"></script>
     </body>
     <!--Written by Jonathan Luck and Kevin Wu (with help from a few others)-->
 </html>
