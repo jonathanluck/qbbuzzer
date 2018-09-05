@@ -69,7 +69,7 @@ function reload(){
 	localStorage.setItem("name",name);
 	localStorage.setItem("room",room);
 	localStorage.setItem("refreshed","true");
-	setTimeout(function(){location.reload(false)},500);
+	//setTimeout(function(){location.reload(false)},500);
 }
 
 $(document).ready(function(){
