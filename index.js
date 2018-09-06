@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var app = require('express')();
 var compression = require('compression');
 var zlib = require('zlib');
