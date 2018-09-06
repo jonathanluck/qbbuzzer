@@ -42,6 +42,12 @@ span {
 	color: #11bb1f;
 }
 
+#buzzbutton {
+	width: 450px;
+	height: 450px; 
+	border-radius: 50% !important; 
+}
+
 .buzzed {
 	color: #f2c32c;
 }
