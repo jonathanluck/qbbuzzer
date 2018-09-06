@@ -16,7 +16,18 @@ if(typeof __dirname == "undefined") {
 	__dirname = "C:\\Program Files\\nodejs\\qbbuzzer";
 }
 //list of files the user is allowed to access
-files = ['', 'index.html', 'style.css', 'pop.mp3', 'socketio.js', 'qbbuzzer.js', 'buzzsound.mp3', 'buzzzzz.mp3'];
+files = [
+	'',
+	'index.html',
+	'style.css', 
+	'pop.mp3', 
+	'socketio.js', 
+	'qbbuzzer.js', 
+	'buzzsound.mp3', 
+	'buzzzzz.mp3', 
+	'watch.html', 
+	'watch.js'
+];
 //allows the server to send files to the client in response to a HTTP GET request
 files.forEach(function(a){
 	app.get('/' + a, function(req, res){

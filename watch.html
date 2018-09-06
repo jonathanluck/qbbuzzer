@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>QBBuzzer - Free online quizbowl buzzer</title>
+        <title>QBB - Free online quizbowl buzzer</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
         <meta name="description" content="Free online quizbowl buzzer system">
@@ -21,9 +21,19 @@
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
         ga('create', 'UA-61778253-1', 'auto');
         ga('send', 'pageview');</script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+        <style>
+        #container{
+            top: 0;
+            left: 0;
+            width: 100%;
+            position: fixed;
+            background-color: grey;
+        }
+        </style>
     </head>
     <body>
-		<link rel="stylesheet" type="text/css" href="style.css">
         <div id="wrapper">
             <div id="popup">
 
@@ -47,13 +57,7 @@
                 <button class="submit" onclick="entername()">Submit</button>
 				
             </div>
-            <button id="buzzbutton" class="default" onclick="buzz()">
-                BUZZ
-            </button>
-            <br>
-            <button class="clear" onclick="clearbuzzer()">
-                CLEAR
-            </button>
+            <div id="container" style="display:none; font-size: 128px;"></div>
         </div>
         <button id="togglesettings" class="settings" onclick="togglesettings()">
             SETTINGS
@@ -94,5 +98,10 @@
         <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src="qbbuzzer.js"></script>
     </body>
+    <!--Written by Jonathan Luck and Kevin Wu (with help from a few others)-->
+</html> <script src="qbbuzzer.js"></script>
+    </body>
+    <!--Written by Jonathan Luck and Kevin Wu (with help from a few others)-->
+</html></body>
     <!--Written by Jonathan Luck and Kevin Wu (with help from a few others)-->
 </html>
