@@ -340,7 +340,7 @@ socket.on('good name', function(msg){
 	newLink.rel = 'shortcut icon';
 	newLink.href = 'data:image/png;base64,' + greenIcon;
 	document.head.appendChild(newLink);
-	document.getElementById("buzzbutton").addEventListener("touchend",buzz)
+	// document.getElementById("buzzbutton").addEventListener("touchend",buzz)
 	finished = true;
 });
 
