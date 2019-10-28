@@ -21,6 +21,8 @@ var clearTimer;
 var newLink = document.createElement('link');
 var redIcon = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAJOgAACToAYJjBRwAAAAMSURBVBhXY7jIxQUAApUA5qdS4JwAAAAASUVORK5CYII="
 var greenIcon = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAJOgAACToAYJjBRwAAAAMSURBVBhXY+BfLAMAAZMAz1929fMAAAAASUVORK5CYII="
+let params = new URLSearchParams(location.search);
+const audience = params.has("watch");
 
 
 function entername(){
@@ -69,7 +71,7 @@ function reload(){
 	localStorage.setItem("name",name);
 	localStorage.setItem("room",room);
 	localStorage.setItem("refreshed","true");
-	setTimeout(function(){location.reload(false)},500);
+	//setTimeout(function(){location.reload(false)},500);
 }
 
 $(document).ready(function(){
@@ -87,7 +89,7 @@ $(document).ready(function(){
 				enterroom();
 				return false;
 			}
-		});
+		});	
 	$('#usernameinput').keypress(
 		function(e){
 			if(!e) {
@@ -206,13 +208,17 @@ function playSound(){
 	}
 }
 
-function changesound(){
+function changesound(){ // pop --> buzz --> beep --> pop
 	if(sound == "pop") {
 		sound = "buzz";
-		audio = "sound2";
+		audio = "sound3";
 		$("#changesound").text("Sound: Buzz");
 	}
 	else if(sound == "buzz") {
+		sound = "beep";
+		audio = "sound2";
+		$("#changesound").text("Sound: beep");
+	} else if (sound == "beep") {
 		sound = "pop";
 		audio = "sound";
 		$("#changesound").text("Sound: Pop");

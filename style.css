@@ -42,8 +42,16 @@ span {
 	color: #11bb1f;
 }
 
+#buzzbutton {
+	width: 450px;
+	height: 450px; 
+	border-radius: 50% !important; 
+}
+
 .buzzed {
-	color: #f2c32c;
+	background-color: #0fa31c;
+	color: white; 
+	font-weight: bold; 
 }
 
 .buzzed :active {
@@ -51,7 +59,9 @@ span {
 }
 
 .locked {
-	color: #D10A0A;
+	color: #FFF;
+	font-weight:bold;
+	background-color: #D10A0A !important;
 	box-shadow: none;
 	cursor: default;
 	background-color: #FFFFFF;

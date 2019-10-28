@@ -1,0 +1,27 @@
+{
+  "name": "qbbuzzer",
+  "version": "1.0.0",
+  "description": "Go to the <a href=\"http://qbbuzzer.com\">website</a> and have everyone in your party join the same room. Press the button that says BUZZ or press the spacebar to (you guessed it) buzz. You can manually clear it before the time runs out. The settings button displays (you guessed it again) the settings, where you can toggle various things.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathanluck/qbbuzzer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonathanluck/qbbuzzer/issues"
+  },
+  "homepage": "https://github.com/jonathanluck/qbbuzzer#readme",
+  "dependencies": {
+    "compression": "^1.7.3",
+    "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "socket.io": "^2.1.1",
+    "zlib": "^1.0.5"
+  }
+}
